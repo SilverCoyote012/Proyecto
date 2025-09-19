@@ -4,27 +4,39 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Room
+import com.example.proyecto.navigation.AppNavHost
 import com.example.proyecto.ui.theme.ProyectoTheme
+import com.example.data_core.database.UserDataBase
+import com.example.data_core.model.UserModel
+import com.example.data_core.repository.UserRepository
+import com.example.data_core.model.UserModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val database = Room.databaseBuilder(
+            applicationContext,
+            UserDataBase::class.java,
+            "user_db"
+        ).build()
+
+        val repository = UserRepository(database.userDao())
+        val viewModelFactory = UserModelFactory(repository)
+        val viewModel = ViewModelProvider(this, viewModelFactory)[UserModel::class.java]
+
         setContent {
             ProyectoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavHost(
+                    viewModel = viewModel
+                )
             }
         }
     }
