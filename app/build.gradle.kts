@@ -66,6 +66,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
 
+    implementation(project(":authentication"))
+    implementation(project(":emprendimientos"))
+    implementation(project(":configuration"))
     implementation(project(":data_core"))
 }
 

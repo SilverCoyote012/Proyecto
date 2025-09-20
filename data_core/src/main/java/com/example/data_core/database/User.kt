@@ -1,13 +1,29 @@
 package com.example.data_core.database
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.UUID
 
-@Entity (tableName = "user")
+@Entity
 data class User(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    @ColumnInfo(name = "nombre") val name: String,
-    @ColumnInfo(name = "email") val email: String,
-    @ColumnInfo(name = "password") val password: String
-)
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    val name: String,
+    val email: String,
+    val password: String
+){
+    fun toMap(): Map<String, Any?> = mapOf(
+        "id" to id,
+        "name" to name,
+        "email" to email,
+        "password" to password
+    )
+
+    companion object {
+        fun fromMap(data: MutableMap<String, Any>): User = User(
+            id = data["id"] as String,
+            name = data["name"] as String,
+            email = data["email"] as String,
+            password = data["password"] as String
+        )
+    }
+}
