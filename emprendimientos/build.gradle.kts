@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -28,7 +29,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -36,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.runtime:runtime")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

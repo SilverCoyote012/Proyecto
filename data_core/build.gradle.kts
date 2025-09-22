@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-
-    id("com.google.gms.google-services") version "4.4.3" apply false
     id("com.google.devtools.ksp")
 }
 
@@ -53,5 +51,3 @@ dependencies {
     implementation("androidx.room:room-ktx:2.7.2")
     ksp("androidx.room:room-compiler:2.7.2")
 }
-
-apply(plugin = "com.google.gms.google-services")

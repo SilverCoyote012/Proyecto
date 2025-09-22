@@ -19,7 +19,7 @@ data class User(
     )
 
     companion object {
-        fun fromMap(data: MutableMap<String, Any>): User = User(
+        fun fromMap(data: Map<String, Any>): User = User(
             id = data["id"] as String,
             name = data["name"] as String,
             email = data["email"] as String,

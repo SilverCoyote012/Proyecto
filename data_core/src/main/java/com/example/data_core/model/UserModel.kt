@@ -41,7 +41,7 @@ class UserModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun getUserById(id: Long): User? {
-        return user.value.find { it.id == id}
+    fun getUserById(id: String): User? {
+        return user.value.find { it.id == id }
     }
 }

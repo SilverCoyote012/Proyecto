@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/configuration" />
             <option value="$PROJECT_DIR$/data_core" />
             <option value="$PROJECT_DIR$/emprendimientos" />
-            <option value="$PROJECT_DIR$/products" />
           </set>
         </option>
       </GradleProjectSettings>

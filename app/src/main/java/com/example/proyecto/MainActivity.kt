@@ -17,6 +17,7 @@ import com.example.data_core.database.UserDataBase
 import com.example.data_core.model.UserModel
 import com.example.data_core.repository.UserRepository
 import com.example.data_core.model.UserModelFactory
+import com.example.data_core.firebase.FirebaseService
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
             "user_db"
         ).build()
 
-        val repository = UserRepository(database.userDao())
+        val repository = UserRepository(database.userDao(), FirebaseService())
         val viewModelFactory = UserModelFactory(repository)
         val viewModel = ViewModelProvider(this, viewModelFactory)[UserModel::class.java]
 
@@ -39,21 +40,5 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ProyectoTheme {
-        Greeting("Android")
     }
 }

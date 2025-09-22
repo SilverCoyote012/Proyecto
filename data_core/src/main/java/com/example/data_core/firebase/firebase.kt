@@ -9,16 +9,25 @@ class FirebaseService(
 ){
     private val collection = firestore.collection("user")
 
+    suspend fun getAllUsers(): List<User> {
+        return try {
+            collection.get().await().documents.mapNotNull {
+                it.toObject(User::class.java)
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
 
-     suspend fun createUser(user: User){
+    suspend fun createUser(user: User){
         collection.document(user.id).set(user.toMap()).await()
-     }
+    }
 
-     suspend fun updateUser(user: User){
+    suspend fun updateUser(user: User){
         collection.document(user.id).set(user.toMap()).await()
-     }
+    }
 
-     suspend fun deleteUser(id: String){
+    suspend fun deleteUser(id: String){
         collection.document(id).delete().await()
-     }
+    }
 }
