@@ -17,8 +17,8 @@ class UserModel(private val repository: UserRepository) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            repository.getAllContacts().collectLatest { contactsFromDb ->
-                _user.value = contactsFromDb
+            repository.getAllUsers().collectLatest { usersFromDb ->
+                _user.value = usersFromDb
             }
         }
     }
@@ -43,5 +43,9 @@ class UserModel(private val repository: UserRepository) : ViewModel() {
 
     fun getUserById(id: String): User? {
         return user.value.find { it.id == id }
+    }
+
+    fun getUserByEmail(email: String): User? {
+        return user.value.find { it.email == email }
     }
 }

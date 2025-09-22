@@ -8,6 +8,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.data_core.model.UserModel
 
 import com.example.proyecto.ui.screensTest.*
+import com.example.authentication.screens.*
+import com.example.authentication.components.*
 
 @Composable
 fun AppNavHost(
@@ -16,9 +18,21 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "homeTest"
+        startDestination = "login"
     ) {
         composable("homeTest") { HomeTest(viewModel) }
+        composable("login") { LoginScreen(
+            viewModel = viewModel,
+            onLoginClick = {  },
+            onRegisterClick = { navController.navigate("register") },
+            onLoginSuccess = { navController.navigate("homeTest") }
+        ) }
+        composable("register") { RegisterScreen(
+            viewModel = viewModel,
+            onLoginClick = { navController.navigate("login") },
+            onRegisterClick = {  }
+        ) }
+
 //        // Emprendimientos
 //        composable("home") {}
 //        composable("catalogo") {}

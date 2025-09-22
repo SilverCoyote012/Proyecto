@@ -27,3 +27,36 @@ data class User(
         )
     }
 }
+
+@Entity
+data class Emprendimientos(
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    val idUsuario: String = UUID.randomUUID().toString(),
+    val imagen: String,
+    val nombreEmprendimiento: String,
+    val telefono: String,
+    val descripcion: String,
+    val categoria: String,
+){
+    fun toMap(): Map<String, Any?> = mapOf(
+        "id" to id,
+        "idUsuario" to idUsuario,
+        "imagen" to imagen,
+        "nombreEmprendimiento" to nombreEmprendimiento,
+        "telefono" to telefono,
+        "descripcion" to descripcion,
+        "categoria" to categoria
+    )
+
+    companion object{
+        fun fromMap(data: Map<String, Any>): Emprendimientos = Emprendimientos(
+            id = data["id"] as String,
+            idUsuario = data["idUsuario"] as String,
+            imagen = data["imagen"] as String,
+            nombreEmprendimiento = data["nombreEmprendimiento"] as String,
+            telefono = data["telefono"] as String,
+            descripcion = data["descripcion"] as String,
+            categoria = data["categoria"] as String
+        )
+    }
+}

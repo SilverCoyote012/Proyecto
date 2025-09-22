@@ -10,7 +10,7 @@ class UserRepository (
     private val userDao: UserDao,
     private val firebaseService: FirebaseService
 ) {
-    fun getAllContacts(): Flow<List<User>> = userDao.getAllUsers()
+    fun getAllUsers(): Flow<List<User>> = userDao.getAllUsers()
 
     suspend fun insert(user: User) {
         userDao.insertUser(user)
