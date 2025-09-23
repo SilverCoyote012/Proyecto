@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "Proyecto"
 include(":app")
 include(":authentication", ":emprendimientos", ":configuration", ":data_core")
+include(":UI_Theme")

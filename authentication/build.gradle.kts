@@ -51,4 +51,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":data_core"))
+    implementation(project(":UI_Theme"))
 }

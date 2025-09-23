@@ -71,4 +71,6 @@ dependencies {
     implementation(project(":emprendimientos"))
     implementation(project(":configuration"))
     implementation(project(":data_core"))
+
+    implementation(project(":UI_Theme"))
 }
