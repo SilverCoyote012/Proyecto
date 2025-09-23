@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
 import com.example.proyecto.navigation.AppNavHost
-import com.example.proyecto.ui.theme.ProyectoTheme
+import com.example.ui_theme.ui.theme.ProyectoTheme
 import com.example.data_core.database.UserDataBase
 import com.example.data_core.model.UserModel
 import com.example.data_core.repository.UserRepository
