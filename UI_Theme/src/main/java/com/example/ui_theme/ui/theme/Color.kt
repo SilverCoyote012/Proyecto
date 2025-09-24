@@ -13,6 +13,8 @@ val RedLight_themeLight = Color(0xFFBF5353)
 val Beige_themeLight = Color(0xFFE8CCBC)
 val Gray_themeLight = Color(0xFF7C7B7B)
 
+val black_themeLight = Color(0xFF000000)
+
 // Colores - Modo Oscuro
 val PinkLight_themeDark = Color(0xFFA56660)
 val Grey_themeDark = Color(0xFF2B2B2B)
@@ -23,3 +25,5 @@ val Black_themeDark = Color(0xFF000000)
 val RedLight_themeDark = Color(0xFFBF5353)
 val BeigeDark_themeDark = Color(0xFF8B5853)
 val Gray_themeDark = Color(0xFFE0DEE3)
+
+val white_themeDark = Color(0xFFFFFFFF)
