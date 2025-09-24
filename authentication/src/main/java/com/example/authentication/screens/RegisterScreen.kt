@@ -55,10 +55,10 @@ fun RegisterScreen(
         Icon(
             painterResource(R.drawable.logospotme),
             contentDescription = "Icono de SpotMe",
-            modifier = Modifier.size(120.dp),
+            modifier = Modifier.size(100.dp),
             tint = MaterialTheme.colorScheme.primary
         )
-        Text("SpotMe", fontSize = 45.sp,
+        Text("SpotMe", fontSize = 55.sp,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
         )
