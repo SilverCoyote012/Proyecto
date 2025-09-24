@@ -1,5 +1,6 @@
 package com.example.authentication.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,14 +21,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.example.authentication.components.AuthenticationNavMenu
-import com.example.data_core.model.UserModel
 import com.example.data_core.database.User
+import com.example.data_core.model.UserModel
 
 @Composable
 fun RegisterScreen(
@@ -59,6 +61,8 @@ fun RegisterFields(
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -131,13 +135,15 @@ fun RegisterFields(
 
         Button(
             onClick = {
-                viewModel.addUser(
-                    User(
-                        name = name,
-                        email = email,
-                        password = password
-                    )
-                )
+                when {
+                    email.isBlank() && name.isBlank() && password.isBlank() -> Toast.makeText(context, "Alguno de los campos estas vacios", Toast.LENGTH_SHORT).show()
+                    !email.isBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email!!).matches() -> Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
+                    password.length < 8 -> Toast.makeText(context, "La contraseña debe tener al menos 8 caracteres", Toast.LENGTH_SHORT).show()
+
+                    else -> {
+                        viewModel.addUser(User(name = name, email = email, password = password))
+                    }
+                }
             },
             modifier = Modifier
                 .width(216.dp)

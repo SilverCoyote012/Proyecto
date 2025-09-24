@@ -1,5 +1,6 @@
 package com.example.authentication.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -7,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -47,6 +49,8 @@ fun LoginFields(
 ){
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -95,10 +99,15 @@ fun LoginFields(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+
         Button(
             onClick = {
-                if (viewModel.getUserByEmail(email) != null) {
-                    onLoginSuccess()
+                when {
+                    email.isBlank() && password.isBlank() -> Toast.makeText(context, "Alguno de los campos estas vacios", Toast.LENGTH_SHORT).show()
+                    !email.isBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email!!).matches() -> Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
+                    else -> {
+                        onLoginSuccess
+                    }
                 }
             },
             modifier = Modifier

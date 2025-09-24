@@ -6,8 +6,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.data_core.model.UserModel
 import com.example.data_core.database.User
+import com.example.data_core.model.UserModel
 
 @Composable
 fun HomeTest(viewModel: UserModel) {

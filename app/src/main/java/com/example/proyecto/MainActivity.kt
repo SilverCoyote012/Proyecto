@@ -4,20 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
+import com.example.data_core.database.DataBase
+import com.example.data_core.firebase.FirebaseServiceEmprendimiento
+import com.example.data_core.firebase.FirebaseServiceUser
+import com.example.data_core.model.EmprendimientoModel
+import com.example.data_core.model.EmprendimientoModelFactory
+import com.example.data_core.model.UserModel
+import com.example.data_core.model.UserModelFactory
+import com.example.data_core.repository.EmprendimientoRepository
+import com.example.data_core.repository.UserRepository
 import com.example.proyecto.navigation.AppNavHost
 import com.example.ui_theme.ui.theme.ProyectoTheme
-import com.example.data_core.database.UserDataBase
-import com.example.data_core.model.UserModel
-import com.example.data_core.repository.UserRepository
-import com.example.data_core.model.UserModelFactory
-import com.example.data_core.firebase.FirebaseService
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,18 +24,24 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         val database = Room.databaseBuilder(
             applicationContext,
-            UserDataBase::class.java,
-            "user_db"
-        ).build()
+            DataBase::class.java,
+            "database"
+        ).fallbackToDestructiveMigration().build()
 
-        val repository = UserRepository(database.userDao(), FirebaseService())
-        val viewModelFactory = UserModelFactory(repository)
-        val viewModel = ViewModelProvider(this, viewModelFactory)[UserModel::class.java]
+        val UserRepository = UserRepository(database.userDao(), FirebaseServiceUser())
+        val viewModelFactoryUser = UserModelFactory(UserRepository)
+        val viewModelUser = ViewModelProvider(this, viewModelFactoryUser)[UserModel::class.java]
+
+        val EmprendimientoRepository = EmprendimientoRepository(database.emprendimientoDao(),
+            FirebaseServiceEmprendimiento())
+        val viewModelFactoryEmprendimiento = EmprendimientoModelFactory(EmprendimientoRepository)
+        val viewModelEmprendimiento = ViewModelProvider(this, viewModelFactoryEmprendimiento)[EmprendimientoModel::class.java]
 
         setContent {
             ProyectoTheme {
                 AppNavHost(
-                    viewModel = viewModel
+                    viewModelUser = viewModelUser,
+                    vievModelEmprendimiento = viewModelEmprendimiento
                 )
             }
         }

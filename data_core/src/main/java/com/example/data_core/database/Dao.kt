@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM user ORDER BY id ASC")
+    @Query("SELECT * FROM User ORDER BY id ASC")
     fun getAllUsers(): Flow<List<User>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -21,4 +21,19 @@ interface UserDao {
 
     @Delete
     suspend fun  deleteUser(user: User)
+}
+
+@Dao
+interface EmprendimeintosDao {
+    @Query("SELECT * FROM Emprendimiento ORDER BY id ASC")
+    fun getAllEmprendimientos(): Flow<List<Emprendimiento>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertEmprendimiento(emprendimiento: Emprendimiento)
+
+    @Update
+    suspend fun updateEmprendimiento(emprendimiento: Emprendimiento)
+
+    @Delete
+    suspend fun  deleteEmprendimiento(emprendimiento: Emprendimiento)
 }

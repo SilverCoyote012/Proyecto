@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.example.data_core.database.User
 import com.example.data_core.repository.UserRepository
+import com.example.data_core.database.Emprendimiento
+import com.example.data_core.repository.EmprendimientoRepository
 
 class UserModel(private val repository: UserRepository) : ViewModel() {
     private val _user = MutableStateFlow<List<User>>(emptyList())
@@ -47,5 +49,41 @@ class UserModel(private val repository: UserRepository) : ViewModel() {
 
     fun getUserByEmail(email: String): User? {
         return user.value.find { it.email == email }
+    }
+}
+
+class EmprendimientoModel(private val repository: EmprendimientoRepository) : ViewModel() {
+    private val _emprendimiento = MutableStateFlow<List<Emprendimiento>>(emptyList())
+
+    val emprendimiento: StateFlow<List<Emprendimiento>> = _emprendimiento.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            repository.getAllEmprendimientos().collectLatest { emprendimientosFromDb ->
+                _emprendimiento.value = emprendimientosFromDb
+            }
+        }
+    }
+
+    fun addUser(emprendimiento: Emprendimiento) {
+        viewModelScope.launch {
+            repository.insert(emprendimiento)
+        }
+    }
+
+    fun updateUser(emprendimiento: Emprendimiento) {
+        viewModelScope.launch {
+            repository.update(emprendimiento)
+        }
+    }
+
+    fun deleteUser(emprendimiento: Emprendimiento) {
+        viewModelScope.launch {
+            repository.delete(emprendimiento)
+        }
+    }
+
+    fun getUserById(id: String): Emprendimiento? {
+        return emprendimiento.value.find { it.id == id }
     }
 }

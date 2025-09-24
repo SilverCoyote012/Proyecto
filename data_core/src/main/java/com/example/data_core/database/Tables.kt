@@ -1,5 +1,6 @@
 package com.example.data_core.database
 
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
@@ -29,9 +30,9 @@ data class User(
 }
 
 @Entity
-data class Emprendimientos(
+data class Emprendimiento(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    val idUsuario: String = UUID.randomUUID().toString(),
+    val idUsuario: String,
     val imagen: String,
     val nombreEmprendimiento: String,
     val telefono: String,
@@ -48,8 +49,8 @@ data class Emprendimientos(
         "categoria" to categoria
     )
 
-    companion object{
-        fun fromMap(data: Map<String, Any>): Emprendimientos = Emprendimientos(
+    companion   object{
+        fun fromMap(data: Map<String, Any>): Emprendimiento = Emprendimiento(
             id = data["id"] as String,
             idUsuario = data["idUsuario"] as String,
             imagen = data["imagen"] as String,
