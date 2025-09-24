@@ -1,5 +1,6 @@
 package com.example.authentication.screens
 
+import androidx.compose.foundation.background
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,10 +9,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,10 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.authentication.R
 
 import com.example.authentication.components.AuthenticationNavMenu
 import com.example.data_core.database.User
@@ -40,10 +48,21 @@ fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .background(MaterialTheme.colorScheme.secondary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Icon(
+            painterResource(R.drawable.logospotme),
+            contentDescription = "Icono de SpotMe",
+            modifier = Modifier.size(120.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Text("SpotMe", fontSize = 45.sp,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+
         AuthenticationNavMenu(
             selectMenu = "register",
             onLoginClick = onLoginClick,
@@ -65,73 +84,107 @@ fun RegisterFields(
     val context = LocalContext.current
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        //modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
     ) {
         Text(
             text = "Nombre",
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             modifier = Modifier
-                .width(290.dp)
-                .padding(bottom = 8.dp),
+                .width(290.dp),
+            color = MaterialTheme.colorScheme.onSecondaryContainer
         )
 
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Ingrese su Nombre Completo") },
+            label = {
+                Text(
+                    "Ingrese su nombre completo",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold)
+                    },
             modifier = Modifier
                 .width(290.dp)
-                .heightIn(min = 56.dp),
+                .heightIn(min = 56.dp)
+                .padding(bottom = 5.dp),
             singleLine = true,
-            shape = RoundedCornerShape(5.dp)
+            shape = RoundedCornerShape(5.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background
+            )
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Text(
             text = "Email",
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.ExtraBold,
             fontSize = 16.sp,
             modifier = Modifier
-                .width(290.dp)
-                .padding(bottom = 8.dp),
+                .width(290.dp),
+            color = MaterialTheme.colorScheme.onSecondaryContainer
         )
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Ingrese su Correo") },
+            label = {
+                Text("Ingrese un correo",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold)
+                    },
             modifier = Modifier
                 .width(290.dp)
-                .heightIn(min = 56.dp),
+                .heightIn(min = 56.dp)
+                .padding(bottom = 5.dp),
             singleLine = true,
-            shape = RoundedCornerShape(5.dp)
+            shape = RoundedCornerShape(5.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background
+            )
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Text(
             text = "Contraseña",
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.ExtraBold,
             fontSize = 16.sp,
             modifier = Modifier
-                .width(290.dp)
-                .padding(bottom = 8.dp),
+                .width(290.dp),
+            color = MaterialTheme.colorScheme.onSecondaryContainer
         )
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Ingrese su Contraseña") },
+            label = { Text("Ingrese una contraseña",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold)
+                    },
             modifier = Modifier
                 .width(290.dp)
-                .heightIn(min = 56.dp),
+                .heightIn(min = 56.dp)
+                .padding(bottom = 5.dp),
             singleLine = true,
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background
+            )
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Button(
             onClick = {
@@ -148,9 +201,11 @@ fun RegisterFields(
             modifier = Modifier
                 .width(216.dp)
                 .height(39.dp),
-
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
         ) {
-            Text(text = "Registrarse", color = Color.White)
+            Text(text = "Registrarse", color = Color.White, fontWeight = FontWeight.ExtraBold,)
         }
     }
 }
