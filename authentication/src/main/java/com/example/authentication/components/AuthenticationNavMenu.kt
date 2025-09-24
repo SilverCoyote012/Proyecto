@@ -25,14 +25,14 @@ fun AuthenticationNavMenu(
     ) {
         TextButton(onClick = onLoginClick) {
             Text(
-                text = "Iniciar Sesion",
+                text = "Login",
                 color = if (selectMenu == "login") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
             )
         }
         TextButton(onClick = onRegisterClick) {
             Text(
-                text = "Registrarse",
+                text = "Registro",
                 color = if (selectMenu == "register") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
             )

@@ -80,20 +80,31 @@ fun LoginFields(
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             modifier = Modifier
-                .width(290.dp)
-                .padding(bottom = 4.dp),
+                .width(290.dp),
             color = MaterialTheme.colorScheme.onSecondaryContainer
         )
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Ingrese su Correo") },
+            label = {
+                Text(
+                "Ingrese su correo",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold)
+                    },
             modifier = Modifier
                 .width(290.dp)
-                .heightIn(min = 56.dp),
+                .heightIn(min = 56.dp)
+                .padding(bottom = 5.dp),
             singleLine = true,
-            shape = RoundedCornerShape(5.dp)
+            shape = RoundedCornerShape(5.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background
+            )
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -103,20 +114,28 @@ fun LoginFields(
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             modifier = Modifier
-                .width(290.dp)
-                .padding(bottom = 4.dp),
+                .width(290.dp),
             color = MaterialTheme.colorScheme.onSecondaryContainer
         )
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Ingrese su Contraseña") },
+            label = { Text("Ingrese su contraseña",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold)
+                    },
             modifier = Modifier
                 .width(290.dp)
                 .heightIn(min = 56.dp),
             singleLine = true,
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background
+            )
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -135,8 +154,11 @@ fun LoginFields(
             modifier = Modifier
                 .width(216.dp)
                 .height(39.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
         ) {
-            Text(text = "Iniciar Sesion", color = Color.White)
+            Text(text = "Iniciar sesión", color = Color.White, fontWeight = FontWeight.ExtraBold)
         }
     }
 }

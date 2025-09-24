@@ -68,7 +68,9 @@ fun RegisterScreen(
             onLoginClick = onLoginClick,
             onRegisterClick = onRegisterClick
         )
+
         Spacer(modifier = Modifier.height(24.dp))
+
         RegisterFields(viewModel = viewModel)
     }
 }
@@ -205,7 +207,7 @@ fun RegisterFields(
                 containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
-            Text(text = "Registrarse", color = Color.White, fontWeight = FontWeight.ExtraBold,)
+            Text(text = "Registrarse", color = Color.White, fontWeight = FontWeight.ExtraBold)
         }
     }
 }
