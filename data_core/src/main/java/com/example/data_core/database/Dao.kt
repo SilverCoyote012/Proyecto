@@ -37,3 +37,33 @@ interface EmprendimeintosDao {
     @Delete
     suspend fun  deleteEmprendimiento(emprendimiento: Emprendimiento)
 }
+
+@Dao
+interface ProductoDao {
+    @Query("SELECT * FROM Producto ORDER BY id ASC")
+    fun getAllProductos(): Flow<List<Producto>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertProducto(producto: Producto)
+
+    @Update
+    suspend fun updateProducto(producto: Producto)
+
+    @Delete
+    suspend fun  deleteProducto(producto: Producto)
+}
+
+@Dao
+interface HistorialDao {
+    @Query("SELECT * FROM Historial ORDER BY id ASC")
+    fun getAllHistoriales(): Flow<List<Historial>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHistorial(historial: Historial)
+
+    @Update
+    suspend fun updateHistorial(historial: Historial)
+
+    @Delete
+    suspend fun  deleteHistorial(historial: Historial)
+}

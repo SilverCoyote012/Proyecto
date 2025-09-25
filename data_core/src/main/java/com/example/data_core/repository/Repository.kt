@@ -2,9 +2,15 @@ package com.example.data_core.repository
 
 import com.example.data_core.database.Emprendimiento
 import com.example.data_core.database.EmprendimeintosDao
+import com.example.data_core.database.Historial
+import com.example.data_core.database.HistorialDao
+import com.example.data_core.database.Producto
+import com.example.data_core.database.ProductoDao
 import com.example.data_core.firebase.FirebaseServiceEmprendimiento
 import com.example.data_core.database.User
 import com.example.data_core.database.UserDao
+import com.example.data_core.firebase.FirebaseServiceHistorial
+import com.example.data_core.firebase.FirebaseServiceProducto
 import com.example.data_core.firebase.FirebaseServiceUser
 import kotlinx.coroutines.flow.Flow
 
@@ -40,6 +46,14 @@ class UserRepository (
 
         }
     }
+
+    suspend fun getUserByEmail(email: String): User? {
+        return try {
+            firebaseService.getAllUsers().find { it.email == email }
+        } catch (_: Exception) {
+            null
+        }
+    }
 }
 
 class EmprendimientoRepository (
@@ -70,6 +84,74 @@ class EmprendimientoRepository (
         emprendimientoDao.deleteEmprendimiento(emprendimiento)
         try {
             firebaseService.deleteEmprendimiento(emprendimiento.id)
+        } catch (_: Exception) {
+
+        }
+    }
+}
+
+class ProductoRepository (
+    private val productoDao: ProductoDao,
+    private val firebaseService: FirebaseServiceProducto
+) {
+    fun getAllProductos(): Flow<List<Producto>> = productoDao.getAllProductos()
+
+    suspend fun insert(producto: Producto) {
+        productoDao.insertProducto(producto)
+        try {
+            firebaseService.createProducto(producto)
+        } catch (_: Exception) {
+
+        }
+    }
+
+        suspend fun update(producto: Producto) {
+        productoDao.updateProducto(producto)
+        try {
+            firebaseService.updateProducto(producto)
+        } catch (_: Exception) {
+
+        }
+    }
+
+    suspend fun delete(producto: Producto) {
+        productoDao.deleteProducto(producto)
+        try {
+            firebaseService.deleteProducto(producto.id)
+        } catch (_: Exception) {
+
+        }
+    }
+}
+
+class HistorialRepository (
+    private val historialDao: HistorialDao,
+    private val firebaseService: FirebaseServiceHistorial
+) {
+    fun getAllHistoriales(): Flow<List<Historial>> = historialDao.getAllHistoriales()
+
+    suspend fun insert(historial: Historial) {
+        historialDao.insertHistorial(historial)
+        try {
+            firebaseService.createHistorial(historial)
+        } catch (_: Exception) {
+
+        }
+    }
+
+    suspend fun update(historial: Historial) {
+        historialDao.updateHistorial(historial)
+        try {
+            firebaseService.updateHistorial(historial)
+        } catch (_: Exception) {
+
+        }
+    }
+
+    suspend fun delete(historial: Historial) {
+        historialDao.deleteHistorial(historial)
+        try {
+            firebaseService.deleteHistorial(historial.id)
         } catch (_: Exception) {
 
         }

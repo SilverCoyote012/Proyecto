@@ -15,6 +15,8 @@ import com.example.data_core.model.*
 fun AppNavHost(
     viewModelUser: UserModel,
     vievModelEmprendimiento: EmprendimientoModel,
+    vievModelProducto: ProductoModel,
+    vievModelHistorial: HistorialModel,
     navController: NavHostController = rememberNavController(),
 ) {
     NavHost(

@@ -3,6 +3,8 @@ package com.example.data_core.model
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.data_core.repository.EmprendimientoRepository
+import com.example.data_core.repository.HistorialRepository
+import com.example.data_core.repository.ProductoRepository
 import com.example.data_core.repository.UserRepository
 
 class UserModelFactory(
@@ -24,6 +26,30 @@ class EmprendimientoModelFactory(
         if (modelClass.isAssignableFrom(EmprendimientoModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return EmprendimientoModel(repository) as T
+        }
+        throw IllegalArgumentException("Uknown ViewModel Class")
+    }
+}
+
+class ProductoModelFactory(
+    private val repository: ProductoRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ProductoModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return ProductoModel(repository) as T
+        }
+        throw IllegalArgumentException("Uknown ViewModel Class")
+    }
+}
+
+class HistorialModelFactory(
+    private val repository: HistorialRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HistorialModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HistorialModel(repository) as T
         }
         throw IllegalArgumentException("Uknown ViewModel Class")
     }

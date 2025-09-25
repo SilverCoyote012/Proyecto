@@ -8,12 +8,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.example.data_core.database.DataBase
 import com.example.data_core.firebase.FirebaseServiceEmprendimiento
+import com.example.data_core.firebase.FirebaseServiceHistorial
+import com.example.data_core.firebase.FirebaseServiceProducto
 import com.example.data_core.firebase.FirebaseServiceUser
 import com.example.data_core.model.EmprendimientoModel
 import com.example.data_core.model.EmprendimientoModelFactory
+import com.example.data_core.model.HistorialModel
+import com.example.data_core.model.HistorialModelFactory
+import com.example.data_core.model.ProductoModel
+import com.example.data_core.model.ProductoModelFactory
 import com.example.data_core.model.UserModel
 import com.example.data_core.model.UserModelFactory
 import com.example.data_core.repository.EmprendimientoRepository
+import com.example.data_core.repository.HistorialRepository
+import com.example.data_core.repository.ProductoRepository
 import com.example.data_core.repository.UserRepository
 import com.example.proyecto.navigation.AppNavHost
 import com.example.ui_theme.ui.theme.ProyectoTheme
@@ -37,11 +45,23 @@ class MainActivity : ComponentActivity() {
         val viewModelFactoryEmprendimiento = EmprendimientoModelFactory(EmprendimientoRepository)
         val viewModelEmprendimiento = ViewModelProvider(this, viewModelFactoryEmprendimiento)[EmprendimientoModel::class.java]
 
+        val ProductoRepository = ProductoRepository(database.productoDao(), FirebaseServiceProducto())
+        val viewModelFactoryProducto = ProductoModelFactory(ProductoRepository)
+        val viewModelProducto = ViewModelProvider(this, viewModelFactoryProducto)[ProductoModel::class.java]
+
+        val HistorialRepository = HistorialRepository(database.historialDao(),
+            FirebaseServiceHistorial()
+        )
+        val viewModelFactoryHistorial = HistorialModelFactory(HistorialRepository)
+        val viewModelHistorial = ViewModelProvider(this, viewModelFactoryHistorial)[HistorialModel::class.java]
+
         setContent {
             ProyectoTheme {
                 AppNavHost(
                     viewModelUser = viewModelUser,
-                    vievModelEmprendimiento = viewModelEmprendimiento
+                    vievModelEmprendimiento = viewModelEmprendimiento,
+                    vievModelProducto = viewModelProducto,
+                    vievModelHistorial = viewModelHistorial
                 )
             }
         }

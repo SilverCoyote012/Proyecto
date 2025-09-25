@@ -49,7 +49,7 @@ data class Emprendimiento(
         "categoria" to categoria
     )
 
-    companion   object{
+    companion object{
         fun fromMap(data: Map<String, Any>): Emprendimiento = Emprendimiento(
             id = data["id"] as String,
             idUsuario = data["idUsuario"] as String,
@@ -58,6 +58,60 @@ data class Emprendimiento(
             telefono = data["telefono"] as String,
             descripcion = data["descripcion"] as String,
             categoria = data["categoria"] as String
+        )
+    }
+}
+
+@Entity
+data class Producto(
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    val idEmprendimiento: String,
+    val imagen: String,
+    val nombreProducto: String,
+    val descripcion: String,
+    val precio: String
+){
+    fun toMap(): Map<String, Any?> = mapOf(
+        "id" to id,
+        "idEmprendimiento" to idEmprendimiento,
+        "imagen" to imagen,
+        "nombreProducto" to nombreProducto,
+        "descripcion" to descripcion,
+        "precio" to precio
+    )
+
+    companion object{
+        fun fromMap(data: Map<String, Any>): Producto = Producto(
+            id = data["id"] as String,
+            idEmprendimiento = data["idEmprendimiento"] as String,
+            imagen = data["imagen"] as String,
+            nombreProducto = data["nombreProducto"] as String,
+            descripcion = data["descripcion"] as String,
+            precio = data["precio"] as String
+        )
+    }
+}
+
+@Entity
+data class Historial(
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    val idUsuario: String,
+    val accion: String,
+    val fecha: String
+){
+    fun toMap(): Map<String, Any?> = mapOf(
+        "id" to id,
+        "idUsuario" to id,
+        "accion" to accion,
+        "fecha" to fecha
+    )
+
+    companion object {
+        fun fromMap(data: Map<String, Any>): Historial = Historial(
+            id = data["id"] as String,
+            idUsuario = data["idUsuario"] as String,
+            accion = data["accion"] as String,
+            fecha = data["fecha"] as String
         )
     }
 }
