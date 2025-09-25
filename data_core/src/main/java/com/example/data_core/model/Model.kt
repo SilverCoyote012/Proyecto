@@ -29,31 +29,41 @@ class UserModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun addUser(user: User) {
+    fun registerWithEmailAndPassword(user: User, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            repository.insert(user)
+            val success = repository.registerWithEmailAndPassword(user)
+            onResult(success)
         }
     }
 
-    fun updateUser(user: User) {
+    fun registerWithGoogleAuthentication(idToken: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            repository.update(user)
+            val success = repository.registerWithGoogleAuthentication(idToken)
+            onResult(success)
         }
     }
 
-    fun deleteUser(user: User) {
+    fun loginWithEmailAndPassword(user: User, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            repository.delete(user)
+            val success = repository.loginWithEmailAndPassword(user)
+            onResult(success)
         }
     }
 
-    fun getUserById(id: String): User? {
-        return user.value.find { it.id == id }
+    fun loginWithGoogleAuthentication(idToken: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val success = repository.loginWithGoogleAuthentication(idToken)
+            onResult(success)
+        }
     }
 
-    fun getUserByEmail(email: String) {
+    suspend fun getCurrentUser(): User? {
+        return repository.getCurrentUser()
+    }
+
+    fun logout() {
         viewModelScope.launch {
-            repository.getUserByEmail(email)
+            repository.logout()
         }
     }
 }

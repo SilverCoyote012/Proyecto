@@ -5,8 +5,10 @@ import com.example.data_core.database.Historial
 import com.example.data_core.database.Producto
 import com.example.data_core.database.User
 import com.google.firebase.Firebase
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
 class FirebaseServiceUser(
@@ -32,34 +34,61 @@ class FirebaseServiceUser(
         collection.document(user.id).set(user.toMap()).await()
     }
 
-    suspend fun deleteUser(id: String){
-        collection.document(id).delete().await()
+    suspend fun registerWithEmailAndPassword(user: User): Boolean {
+        return try {
+            Firebase.auth.createUserWithEmailAndPassword(user.email, user.password)
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 
-//    val auth = Firebase.auth
-//
-//    suspend fun createAccount(email: String, password: String) {
-//        // [START create_user_with_email]
-//        auth.createUserWithEmailAndPassword(email, password)
-//            .addOnCompleteListener(this) { task ->
-//                if (task.isSuccessful) {
-//                    // Sign in success, update UI with the signed-in user's information
-//                    Log.d(TAG, "createUserWithEmail:success")
-//                    val user = auth.currentUser
-//                    updateUI(user)
-//                } else {
-//                    // If sign in fails, display a message to the user.
-//                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-//                    Toast.makeText(
-//                        baseContext,
-//                        "Authentication failed.",
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-//                    updateUI(null)
-//                }
-//            }
-//        // [END create_user_with_email]
-//    }
+    suspend fun registerWithGoogleAuthentication(idToken: String): Boolean {
+        return try {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            Firebase.auth.signInWithCredential(credential).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun loginWithEmailAndPassword(user: User): Boolean {
+        return try {
+            Firebase.auth.signInWithEmailAndPassword(user.email, user.password).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun loginWithGoogleAuthentication(idToken: String): Boolean {
+        return try {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            Firebase.auth.signInWithCredential(credential).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun getCurrentUser(): User? {
+        val firebaseUser = Firebase.auth.currentUser
+        return if (firebaseUser != null) {
+            User(
+                id = firebaseUser.uid,
+                name = firebaseUser.displayName ?: "",
+                email = firebaseUser.email ?: "",
+                password = ""
+            )
+        } else {
+            null
+        }
+    }
+
+    suspend fun logout() {
+        Firebase.auth.signOut()
+    }
 }
 
 class FirebaseServiceEmprendimiento(

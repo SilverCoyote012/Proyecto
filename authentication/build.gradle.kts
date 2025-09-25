@@ -46,9 +46,15 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.play.services.basement)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation("com.google.android.gms:play-services-auth:21.1.0")
+    implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation("androidx.activity:activity-compose:1.6.1")
 
     implementation(project(":data_core"))
     implementation(project(":UI_Theme"))

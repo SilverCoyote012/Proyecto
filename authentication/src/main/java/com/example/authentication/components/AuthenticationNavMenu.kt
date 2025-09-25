@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,10 +37,10 @@ fun AuthenticationNavMenu(
                     fontWeight = FontWeight.Bold
                 )
                 if (selectMenu == "login") {
-                    Divider(
-                        color = MaterialTheme.colorScheme.primary,
+                    HorizontalDivider(
+                        modifier = Modifier.width(35.dp),
                         thickness = 2.dp,
-                        modifier = Modifier.width(35.dp)
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -52,10 +53,10 @@ fun AuthenticationNavMenu(
                     fontWeight = FontWeight.Bold
                 )
                 if (selectMenu == "register") {
-                    Divider(
-                        color = MaterialTheme.colorScheme.primary,
+                    HorizontalDivider(
+                        modifier = Modifier.width(55.dp),
                         thickness = 2.dp,
-                        modifier = Modifier.width(55.dp)
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }

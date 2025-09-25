@@ -2,6 +2,8 @@ package com.example.authentication.screens
 
 import androidx.compose.foundation.background
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -17,7 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.authentication.R
 import com.example.authentication.components.AuthenticationNavMenu
+import com.example.data_core.database.User
 import com.example.data_core.model.UserModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 
 @Composable
 fun LoginScreen(
@@ -69,6 +75,27 @@ fun LoginFields(
     var password by remember { mutableStateOf("") }
 
     val context = LocalContext.current
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val idToken = account.idToken
+            if (idToken != null) {
+                viewModel.loginWithGoogleAuthentication(idToken) { success ->
+                    if (success) {
+                        onLoginSuccess()
+                    } else {
+                        Toast.makeText(context, "Error al intentar ingresar con Google", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        } catch (_: Exception) {
+
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -147,7 +174,17 @@ fun LoginFields(
                     email.isBlank() && password.isBlank() -> Toast.makeText(context, "Alguno de los campos estas vacios", Toast.LENGTH_SHORT).show()
                     !email.isBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email!!).matches() -> Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
                     else -> {
-                        onLoginSuccess
+                        try {
+                            viewModel.loginWithEmailAndPassword(User("", "", email, password)) { success ->
+                                if (success) {
+                                    onLoginSuccess()
+                                } else {
+                                    Toast.makeText(context, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } catch (e: Exception) {
+
+                        }
                     }
                 }
             },
@@ -159,6 +196,26 @@ fun LoginFields(
             )
         ) {
             Text(text = "Iniciar sesión", color = Color.White, fontWeight = FontWeight.ExtraBold)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(context.getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build()
+
+                val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                launcher.launch(googleSignInClient.signInIntent)
+            },
+            modifier = Modifier
+                .width(216.dp)
+                .height(39.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+        ) {
+            Text("Iniciar Sesión con Google", color = Color.White, fontWeight = FontWeight.ExtraBold)
         }
     }
 }

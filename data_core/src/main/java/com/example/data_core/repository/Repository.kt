@@ -1,5 +1,6 @@
 package com.example.data_core.repository
 
+import android.widget.Toast
 import com.example.data_core.database.Emprendimiento
 import com.example.data_core.database.EmprendimeintosDao
 import com.example.data_core.database.Historial
@@ -20,39 +21,53 @@ class UserRepository (
 ) {
     fun getAllUsers(): Flow<List<User>> = userDao.getAllUsers()
 
-    suspend fun insert(user: User) {
+    suspend fun registerWithEmailAndPassword(user:User): Boolean {
         userDao.insertUser(user)
-        try {
-            firebaseService.createUser(user)
-        } catch (_: Exception) {
-
-        }
-    }
-
-    suspend fun update(user: User) {
-        userDao.updateUser(user)
-        try {
-            firebaseService.updateUser(user)
-        } catch (_: Exception) {
-
-        }
-    }
-
-    suspend fun delete(user: User) {
-        userDao.deleteUser(user)
-        try {
-            firebaseService.deleteUser(user.id)
-        } catch (_: Exception) {
-
-        }
-    }
-
-    suspend fun getUserByEmail(email: String): User? {
         return try {
-            firebaseService.getAllUsers().find { it.email == email }
+            firebaseService.registerWithEmailAndPassword(user)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    suspend fun registerWithGoogleAuthentication(idToken: String): Boolean {
+        return try {
+            firebaseService.registerWithGoogleAuthentication(idToken)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun loginWithEmailAndPassword(user: User): Boolean {
+        return try {
+            firebaseService.loginWithEmailAndPassword(user)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    suspend fun loginWithGoogleAuthentication(idToken: String): Boolean {
+        return try {
+            firebaseService.loginWithGoogleAuthentication(idToken)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun getCurrentUser(): User? {
+        return try {
+            firebaseService.getCurrentUser()
         } catch (_: Exception) {
             null
         }
+    }
+
+    suspend fun logout() {
+        firebaseService.logout()
     }
 }
 
