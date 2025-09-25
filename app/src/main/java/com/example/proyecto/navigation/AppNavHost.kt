@@ -6,10 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-import com.example.proyecto.ui.screens.*
 import com.example.authentication.screens.*
 import com.example.authentication.components.*
 import com.example.data_core.model.*
+import com.example.proyecto.ui.screensTest.*
 
 @Composable
 fun AppNavHost(
@@ -23,11 +23,11 @@ fun AppNavHost(
         navController = navController,
         startDestination = "SplashScreen"
     ) {
+        composable("SplashScreen") { SplashScreen(navController) }
         composable("homeTest") { HomeTest(
             viewModel = viewModelUser,
             onLogoutClick = { navController.navigate("login") }
         ) }
-        composable("SplashScreen") { SplashScreen(navController) }
         composable("login") { LoginScreen(
             viewModel = viewModelUser,
             onLoginClick = {  },
