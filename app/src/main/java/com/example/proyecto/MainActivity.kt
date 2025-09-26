@@ -4,6 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.example.data_core.database.DataBase
@@ -25,6 +29,7 @@ import com.example.data_core.repository.ProductoRepository
 import com.example.data_core.repository.UserRepository
 import com.example.proyecto.navigation.AppNavHost
 import com.example.ui_theme.ui.theme.ProyectoTheme
+import kotlinx.coroutines.selects.select
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,8 +61,11 @@ class MainActivity : ComponentActivity() {
         val viewModelHistorial = ViewModelProvider(this, viewModelFactoryHistorial)[HistorialModel::class.java]
 
         setContent {
-            ProyectoTheme {
+            var selectModo by remember { mutableStateOf(false)  }
+            ProyectoTheme(darkTheme = selectModo) {
                 AppNavHost(
+                    selectModo = selectModo,
+                    onSelectModo = { nuevoModo -> selectModo = nuevoModo },
                     viewModelUser = viewModelUser,
                     vievModelEmprendimiento = viewModelEmprendimiento,
                     vievModelProducto = viewModelProducto,

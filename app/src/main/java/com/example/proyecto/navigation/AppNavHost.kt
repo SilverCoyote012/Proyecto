@@ -17,6 +17,8 @@ import com.example.configuration.screens.misEmprendimientos.productosEmprendimie
 
 @Composable
 fun AppNavHost(
+    selectModo: Boolean,
+    onSelectModo: (Boolean) -> Unit,
     viewModelUser: UserModel,
     vievModelEmprendimiento: EmprendimientoModel,
     vievModelProducto: ProductoModel,
@@ -36,7 +38,7 @@ fun AppNavHost(
             viewModel = viewModelUser,
             onLoginClick = {  },
             onRegisterClick = { navController.navigate("register") },
-            onLoginSuccess = { navController.navigate("homeTest") }
+            onLoginSuccess = { navController.navigate("configuracionMenu") }
         ) }
         composable("register") { RegisterScreen(
             viewModel = viewModelUser,
@@ -61,9 +63,14 @@ fun AppNavHost(
                 viewModel = viewModelUser
             )
         }
-        composable("Configuracion") { configuracionApp() }
+        composable("Configuracion") {
+            configuracionApp(
+                onBackPage = { navController.popBackStack()}, selectModo = selectModo,
+                onSelectModo = { nuevoModo -> onSelectModo(nuevoModo) }
+            )
+        }
         composable("HistorialUser") { historialUsuario( onBackPage = { navController.popBackStack()}, viewModel = viewModelHistorial ) }
-        composable("EditarUsuario") { editUser(onBackPage = { navController.popBackStack()}, viewModel = viewModelUser) }
+        composable("EditarUsuario") { editUser( onBackPage = { navController.popBackStack()}, viewModel = viewModelUser) }
 
         composable("UsuarioEmprendimientos") {
             UserEmprendimientos(
