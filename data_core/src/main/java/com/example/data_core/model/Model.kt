@@ -111,8 +111,8 @@ class EmprendimientoModel(private val repository: EmprendimientoRepository) : Vi
         }
     }
 
-    fun getEmprendimientoById(id: String): Emprendimiento? {
-        return emprendimiento.value.find { it.id == id }
+    fun getEmprendimientosByUserId(userId: String): List<Emprendimiento> {
+        return emprendimiento.value.filter { it.idUsuario == userId }
     }
 }
 

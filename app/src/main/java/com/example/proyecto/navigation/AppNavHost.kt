@@ -77,10 +77,10 @@ fun AppNavHost(
                 onBackPage = { navController.popBackStack()},
                 onCreateEmprenClick = { navController.navigate("CrearEmprendimiento")},
                 onEmprenClick = { navController.navigate("EmprendimientoProductos")},
-                viewModel = viewModelEmprendimiento
+                viewModel = viewModelEmprendimiento, viewModelUser = viewModelUser
             )
         }
-        composable("CrearEmprendimiento") { createEmprendimiento( onBackPage = { navController.popBackStack() } ) }
+        composable("CrearEmprendimiento") { createEmprendimiento( onBackPage = { navController.popBackStack() }, viewModel = viewModelEmprendimiento, viewModelUser = viewModelUser ) }
         composable("EmprendimientoProductos") {
             ProductosEmprendimiento(
                 onEditClick = { navController.navigate("EditProducto")},

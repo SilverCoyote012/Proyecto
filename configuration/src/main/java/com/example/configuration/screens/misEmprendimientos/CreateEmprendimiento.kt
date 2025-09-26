@@ -1,5 +1,6 @@
 package com.example.configuration.screens.misEmprendimientos
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,11 +45,34 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.data_core.database.Emprendimiento
+import com.example.data_core.database.User
+import com.example.data_core.model.EmprendimientoModel
+import com.example.data_core.model.UserModel
 import com.example.ui_theme.ui.theme.ProyectoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun createEmprendimiento(onBackPage: () -> Unit = {}){
+fun createEmprendimiento(
+    onBackPage: () -> Unit = {},
+    viewModel: EmprendimientoModel,
+    viewModelUser: UserModel
+){
+    var userState by remember { mutableStateOf<User?>(null) }
+    var hasError by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        try {
+            val user = viewModelUser.getCurrentUser()
+            if (user != null) {
+                userState = user
+            } else {
+                hasError = "No se pudo cargar el usuario"
+            }
+        } catch (e: Exception) {
+            hasError = "Ocurrió un error al cargar el usuario"
+        }
+    }
+
     var name by remember { mutableStateOf("") }
     var descripcion by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
@@ -110,7 +135,7 @@ fun createEmprendimiento(onBackPage: () -> Unit = {}){
         Column(
             modifier = Modifier.padding(innerPadding)
                 .padding(20.dp).fillMaxSize().fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            //horizontalAlignment = Alignment.CenterHorizontally
         ) {
             //Nombre del negocio
             Text(
@@ -237,6 +262,7 @@ fun createEmprendimiento(onBackPage: () -> Unit = {}){
                         DropdownMenuItem(
                             text = { Text(categoria) },
                             onClick = {
+                                selectError = ""
                                 selectCategoria = categoria
                                 expanded = false
                             }
@@ -288,7 +314,7 @@ fun createEmprendimiento(onBackPage: () -> Unit = {}){
                 Text(
                     text = phoneError,
                     color = MaterialTheme.colorScheme.error,
-                    style = TextStyle(fontSize = 12.sp)
+                    style = TextStyle(fontSize = 12.sp), textAlign = TextAlign.Start
                 )
             }
 
@@ -305,7 +331,7 @@ fun createEmprendimiento(onBackPage: () -> Unit = {}){
             OutlinedTextField(
                 value = image,
                 onValueChange = {
-                    phone = it
+                    image = it
                     if (it.isNotBlank()) imageError = ""
                 },
                 label = { Text("Ingrese la URL de imagen",
@@ -339,7 +365,40 @@ fun createEmprendimiento(onBackPage: () -> Unit = {}){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = { },
+                    onClick = {
+                        when {
+                            name.isBlank() || descripcion.isBlank() || phone.isBlank() || image.isBlank() || selectCategoria.isBlank()  -> {
+                                Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
+                                if (name.isEmpty()) nameError = "Campo por llenar"
+                                if (descripcion.isEmpty()) descripcionError = "Campo por llenar"
+                                if (phone.isEmpty()) phoneError = "Campo por llenar"
+                                if (image.isEmpty()) imageError = "Campo por llenar"
+                                if (selectCategoria.isEmpty()) selectError = "Campo por llenar"
+                            }
+                            !android.util.Patterns.PHONE.matcher(phone).matches() -> {
+                                Toast.makeText(context, "Error en el formato de telefono", Toast.LENGTH_SHORT).show()
+                                phoneError = "Error en formato"
+                            }
+                            !android.util.Patterns.WEB_URL.matcher(image).matches() ->{
+                                Toast.makeText(context, "Error en el formato de URL de imagen", Toast.LENGTH_SHORT).show()
+                                imageError = "Error en formato"
+                            }
+                            phone.length < 8 -> {
+                                Toast.makeText(context, "El telefono es de 8 digitos", Toast.LENGTH_SHORT).show()
+                                phoneError = "Formato de 8 digitos"
+                            }
+                            else -> {
+                                try {
+                                    viewModel.addEmprendimiento(
+                                        Emprendimiento(
+                                            idUsuario = userState?.id ?: hasError, nombreEmprendimiento = name,
+                                            imagen = image, telefono = phone, descripcion = descripcion, categoria = selectCategoria)
+                                    )
+                                    onBackPage()
+                                } catch (_: Exception) { }
+                            }
+                        }
+                    },
                     modifier = Modifier.width(277.dp).padding(10.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(5.dp)
@@ -355,13 +414,13 @@ fun createEmprendimiento(onBackPage: () -> Unit = {}){
     }
 }
 
-@Preview(showBackground = true, /*, showSystemUi = true*/)
-@Composable
-fun muestra() {
-    ProyectoTheme(darkTheme = false) {
-        Column(modifier = Modifier.fillMaxSize())
-        {
-            createEmprendimiento()
-        }
-    }
-}
+//@Preview(showBackground = true, /*, showSystemUi = true*/)
+//@Composable
+//fun muestra() {
+//    ProyectoTheme(darkTheme = false) {
+//        Column(modifier = Modifier.fillMaxSize())
+//        {
+//            createEmprendimiento()
+//        }
+//    }
+//}

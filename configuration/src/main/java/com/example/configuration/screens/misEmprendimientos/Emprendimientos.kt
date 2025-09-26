@@ -7,13 +7,16 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,6 +36,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.SwipeToDismissBox
@@ -64,7 +68,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.data_core.database.Emprendimiento
+import com.example.data_core.database.User
 import com.example.data_core.model.EmprendimientoModel
+import com.example.data_core.model.UserModel
 import com.example.ui_theme.ui.theme.PinkBrown_themeLight
 import com.example.ui_theme.ui.theme.ProyectoTheme
 
@@ -77,7 +83,7 @@ fun cardEmprendimientoUser(
     SwipeToDismissBox(
         state = swipeState,
         modifier = Modifier
-            .fillMaxWidth()
+            .height(180.dp).padding(start = 10.dp, end = 10.dp, top = 25.dp, bottom = 15.dp)
             .clip(RoundedCornerShape(16.dp)),
         backgroundContent = {
             Icon(
@@ -86,15 +92,13 @@ fun cardEmprendimientoUser(
                 modifier = Modifier
                     .fillMaxWidth().fillMaxSize()
                     .background(MaterialTheme.colorScheme.onTertiary)
-                    .wrapContentSize(Alignment.CenterEnd)
-                    .padding(12.dp),
+                    .wrapContentSize(Alignment.CenterEnd),
                 tint = Color.White
             )
         }
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth().clickable( onClick = onEmprenClick )
-                .padding(start = 10.dp, end = 10.dp, top = 25.dp, bottom = 15.dp).height(150.dp),
+            modifier = Modifier.clickable( onClick = onEmprenClick ).fillMaxSize().height(150.dp),
             contentAlignment = Alignment.Center
         ) {
             AsyncImage(
@@ -104,7 +108,7 @@ fun cardEmprendimientoUser(
                 modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(10.dp))
             )
             Card(
-                modifier = Modifier.fillMaxWidth(0.8f).height(50.dp),
+                modifier = Modifier.fillMaxWidth(0.9f).height(25.dp),
                 colors = CardDefaults.cardColors(
                     MaterialTheme.colorScheme.onSecondaryContainer
                 ),
@@ -134,15 +138,31 @@ fun UserEmprendimientos(
     onBackPage: () -> Unit = {},
     onCreateEmprenClick: () -> Unit = {},
     onEmprenClick: () -> Unit = {},
-    viewModel: EmprendimientoModel
+    viewModel: EmprendimientoModel,
+    viewModelUser: UserModel
 ) {
-    val emprendimientos by viewModel.emprendimiento.collectAsState()
-    val snackBarHostState = remember { SnackbarHostState() }
+    var userState by remember { mutableStateOf<User?>(null) }
+    var hasError by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        try {
+            val user = viewModelUser.getCurrentUser()
+            if (user != null) {
+                userState = user
+            } else {
+                hasError = "No se pudo cargar el usuario"
+            }
+        } catch (e: Exception) {
+            hasError = "Ocurrió un error al cargar el usuario"
+        }
+    }
+
+    val emprendimientos = userState?.id?.let { viewModel.getEmprendimientosByUserId(it) } ?: emptyList()
+    val SnackBarHostState = remember { SnackbarHostState() }
     var deleteEmpren by remember { mutableStateOf<Emprendimiento?>(null) }
 
     deleteEmpren?.let{ emprendimiento ->
         LaunchedEffect(emprendimiento) {
-            val result = snackBarHostState.showSnackbar(
+            val result = SnackBarHostState.showSnackbar(
                 message = "Emprendimiento eliminado",
                 actionLabel = "Deshacer"
             )
@@ -182,11 +202,12 @@ fun UserEmprendimientos(
                     )
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(SnackBarHostState) }
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)
-                    .padding(2.dp).fillMaxWidth()
+                    .padding(2.dp).fillMaxWidth().fillMaxSize()
         ){
             if (emprendimientos.isEmpty()) {
                 Text(
@@ -240,14 +261,3 @@ fun UserEmprendimientos(
         }
     }
 }
-
-//@Preview(showBackground = true, /*, showSystemUi = true*/)
-//@Composable
-//fun muestra() {
-//    ProyectoTheme(darkTheme = false) {
-//        Column(modifier = Modifier.fillMaxSize())
-//        {
-//            cardEmprendimientoUser()
-//        }
-//    }
-//}
