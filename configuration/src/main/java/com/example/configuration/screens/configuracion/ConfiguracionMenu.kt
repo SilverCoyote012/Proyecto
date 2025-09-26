@@ -70,7 +70,7 @@ fun MenuConfig(
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.End,
                         fontWeight = FontWeight.ExtraBold,
-                        fontSize = 25.sp,
+                        fontSize = 27.sp,
                         color = MaterialTheme.colorScheme.onTertiaryContainer)
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
