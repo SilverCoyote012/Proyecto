@@ -93,26 +93,26 @@ class EmprendimientoModel(private val repository: EmprendimientoRepository) : Vi
         }
     }
 
-    fun addUser(emprendimiento: Emprendimiento) {
+    fun addEmprendimiento(emprendimiento: Emprendimiento) {
         viewModelScope.launch {
             repository.insert(emprendimiento)
         }
     }
 
-    fun updateUser(emprendimiento: Emprendimiento) {
+    fun updateEmprendimiento(emprendimiento: Emprendimiento) {
         viewModelScope.launch {
             repository.update(emprendimiento)
         }
     }
 
-    fun deleteUser(emprendimiento: Emprendimiento) {
+    fun deleteEmprendimiento(emprendimiento: Emprendimiento) {
         viewModelScope.launch {
             repository.delete(emprendimiento)
         }
     }
 
-    fun getUserById(id: String): Emprendimiento? {
-        return emprendimiento.value.find { it.id == id }
+    fun getEmprendimientosByUserId(userId: String): List<Emprendimiento> {
+        return emprendimiento.value.filter { it.idUsuario == userId }
     }
 }
 
