@@ -91,7 +91,7 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                         textAlign = TextAlign.Right,
                         style =
                             TextStyle(
-                                fontSize = 25.sp,
+                                fontSize = 27.sp,
                                 color = MaterialTheme.colorScheme.surface,
                                 fontWeight = FontWeight.ExtraBold
                             )

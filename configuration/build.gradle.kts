@@ -52,6 +52,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    //Dependencia para carga de imagenes por URL
+    implementation("io.coil-kt:coil-compose:2.4.0")
     implementation(project(":UI_Theme"))
     implementation(project(":data_core"))
 }

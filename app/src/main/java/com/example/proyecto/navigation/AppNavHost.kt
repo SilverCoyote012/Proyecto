@@ -20,7 +20,7 @@ fun AppNavHost(
     selectModo: Boolean,
     onSelectModo: (Boolean) -> Unit,
     viewModelUser: UserModel,
-    vievModelEmprendimiento: EmprendimientoModel,
+    viewModelEmprendimiento: EmprendimientoModel,
     vievModelProducto: ProductoModel,
     viewModelHistorial: HistorialModel,
     navController: NavHostController = rememberNavController(),
@@ -74,8 +74,10 @@ fun AppNavHost(
 
         composable("UsuarioEmprendimientos") {
             UserEmprendimientos(
+                onBackPage = { navController.popBackStack()},
                 onCreateEmprenClick = { navController.navigate("CrearEmprendimiento")},
-                onEmprenClick = { navController.navigate("EmprendimientoProductos")}
+                onEmprenClick = { navController.navigate("EmprendimientoProductos")},
+                viewModel = viewModelEmprendimiento
             )
         }
         composable("CrearEmprendimientos") { createEmprendimiento() }

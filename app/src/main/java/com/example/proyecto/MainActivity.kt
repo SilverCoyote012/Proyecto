@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     selectModo = selectModo,
                     onSelectModo = { nuevoModo -> selectModo = nuevoModo },
                     viewModelUser = viewModelUser,
-                    vievModelEmprendimiento = viewModelEmprendimiento,
+                    viewModelEmprendimiento = viewModelEmprendimiento,
                     vievModelProducto = viewModelProducto,
                     viewModelHistorial = viewModelHistorial
                 )
