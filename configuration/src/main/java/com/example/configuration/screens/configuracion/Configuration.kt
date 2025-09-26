@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui_theme.ui.theme.GrayWhite_themeLight
 import com.example.ui_theme.ui.theme.PinkBrown_themeLight
+import com.example.ui_theme.ui.theme.ProyectoTheme
 
 @Composable
 fun cardModo(selectModo: Boolean, onSelectModo: (Boolean) -> Unit = {} ){
@@ -114,6 +117,82 @@ fun cardModo(selectModo: Boolean, onSelectModo: (Boolean) -> Unit = {} ){
     }
 }
 
+@Composable
+fun cardPreferencia(onSelectModo: (Boolean) -> Unit = {}){
+    var selectModo = false
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(10.dp),
+        colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onSurfaceVariant),
+        shape = RoundedCornerShape(5.dp)
+    ) {
+        Text("Preferencias", textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 5.dp, end = 5.dp, top = 10.dp, bottom = 1.dp),
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            fontWeight = FontWeight.ExtraBold, fontSize = 20.sp
+        )
+        Card(
+            modifier = Modifier.padding(10.dp),
+            colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.background),
+            shape = RoundedCornerShape(5.dp)
+        ) {
+            Text("Elementos", modifier = Modifier.fillMaxWidth()
+                .padding(start = 10.dp, top = 10.dp, end = 10.dp),
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                fontWeight = FontWeight.ExtraBold, fontSize = 17.sp
+            )
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(10.dp)) {
+                Column( modifier = Modifier.weight(1f).height(50.dp).padding(bottom = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (!selectModo) {
+                        Text(
+                            "Iconos", modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
+                            textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold,
+                            fontSize = 15.sp, color = PinkBrown_themeLight
+                        )
+                    } else {
+                        Text(
+                            "Iconos", modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
+                            textAlign = TextAlign.Center, color = GrayWhite_themeLight
+                        )
+                    }
+                    RadioButton(
+                        selected = !selectModo,
+                        onClick = { onSelectModo(false) },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = PinkBrown_themeLight,
+                            unselectedColor = GrayWhite_themeLight,
+                            disabledUnselectedColor = GrayWhite_themeLight
+                        )
+                    )
+                }
+                Column(modifier = Modifier.weight(1f).height(50.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (!selectModo) {
+                        Text(
+                            "Texto", modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
+                            textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold,
+                            fontSize = 15.sp, color = PinkBrown_themeLight
+                        )
+                    } else {
+                        Text(
+                            "Texto", modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
+                            textAlign = TextAlign.Center, color = GrayWhite_themeLight
+                        )
+                    }
+                    RadioButton(
+                        selected = selectModo,
+                        onClick = { onSelectModo(true) },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = PinkBrown_themeLight,
+                            unselectedColor = GrayWhite_themeLight,
+                            disabledUnselectedColor = GrayWhite_themeLight
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun configuracionApp(
@@ -165,16 +244,17 @@ fun configuracionApp(
             Spacer(modifier = Modifier.padding(15.dp))
 
             //Falta manejo de Icono a Texto en la pantalla de Catalogo de Emprendimientos
+            cardPreferencia()
         }
     }
 }
 
-//@Preview(showBackground = true/*, showSystemUi = true*/)
-//@Composable
-//fun muestra() {
-//    ProyectoTheme(darkTheme = false) {
-//        Column(modifier = Modifier.fillMaxSize()) {
-//            configuracionApp()
-//        }
-//    }
-//}
+@Preview(showBackground = true/*, showSystemUi = true*/)
+@Composable
+fun muestra() {
+    ProyectoTheme(darkTheme = false) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            cardPreferencia()
+        }
+    }
+}
