@@ -66,6 +66,10 @@ class UserRepository (
         }
     }
 
+    suspend fun updateUser(user: User){
+        userDao.updateUser(user)
+    }
+
     suspend fun logout() {
         firebaseService.logout()
     }

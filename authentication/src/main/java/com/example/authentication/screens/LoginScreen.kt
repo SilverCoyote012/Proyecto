@@ -129,7 +129,6 @@ fun LoginFields(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
                 unfocusedContainerColor = MaterialTheme.colorScheme.background
             )
         )
@@ -160,7 +159,6 @@ fun LoginFields(
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
                 unfocusedContainerColor = MaterialTheme.colorScheme.background
             )
         )

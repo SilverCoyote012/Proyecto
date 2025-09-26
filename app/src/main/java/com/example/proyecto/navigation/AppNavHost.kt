@@ -5,25 +5,32 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+
 import com.example.authentication.screens.*
 import com.example.data_core.model.*
-import com.example.proyecto.ui.screensTest.HomeTest
+import com.example.proyecto.ui.screensTest.*
+import com.example.configuration.screens.configuracion.*
+import com.example.configuration.screens.historial.*
+import com.example.configuration.screens.miPerfil.*
+import com.example.configuration.screens.misEmprendimientos.*
+import com.example.configuration.screens.misEmprendimientos.productosEmprendimiento.*
 
 @Composable
 fun AppNavHost(
     viewModelUser: UserModel,
     vievModelEmprendimiento: EmprendimientoModel,
     vievModelProducto: ProductoModel,
-    vievModelHistorial: HistorialModel,
+    viewModelHistorial: HistorialModel,
     navController: NavHostController = rememberNavController(),
 ) {
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "SplashScreen"
     ) {
+        composable("SplashScreen") { SplashScreen(navController) }
         composable("homeTest") { HomeTest(
             viewModel = viewModelUser,
-            onLogoutClick = { navController.navigate("login") }
+            onLogoutClick = { navController.navigate("SplashScreen") }
         ) }
         composable("login") { LoginScreen(
             viewModel = viewModelUser,
@@ -42,11 +49,36 @@ fun AppNavHost(
 //        composable("catalogo") {}
 //        composable("emprendimiento_detalle") {}
 //
-//        // Configuration
-//        composable("configuracion") {}
-//        composable("historial") {}
-//        composable("editar_perfil") {}
-//        composable("crear_emprendimiento") {}
-//        composable("emprendimiento_creado") {}
+// Configuration
+        composable("configuracionMenu") {
+            MenuConfig (
+                onNavigateBack = {  },
+                onLogOut = { navController.navigate("SplashScreen") },
+                onPerfilClick = { navController.navigate("EditarUsuario") },
+                onEmprendimientosClick = { navController.navigate("UsuarioEmprendimientos") },
+                onHistorialClick = { navController.navigate("HistorialUser") },
+                onConfigClick = { navController.navigate("Configuracion") },
+                viewModel = viewModelUser
+            )
+        }
+        composable("Configuracion") { configuracionApp() }
+        composable("HistorialUser") { historialUsuario( onBackPage = { navController.popBackStack()}, viewModel = viewModelHistorial ) }
+        composable("EditarUsuario") { editUser(onBackPage = { navController.popBackStack()}, viewModel = viewModelUser) }
+
+        composable("UsuarioEmprendimientos") {
+            UserEmprendimientos(
+                onCreateEmprenClick = { navController.navigate("CrearEmprendimiento")},
+                onEmprenClick = { navController.navigate("EmprendimientoProductos")}
+            )
+        }
+        composable("CrearEmprendimientos") { createEmprendimiento() }
+        composable("EmprendimientoProductos") {
+            ProductosEmprendimiento(
+                onEditClick = { navController.navigate("EditProducto")},
+                onCreateClick = { navController.navigate("CreateProducto")}
+            )
+        }
+        composable("EditProducto") { EditarProducto() }
+        composable("CreateProducto") { CrearProducto() }
     }
 }

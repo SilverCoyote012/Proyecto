@@ -3,6 +3,9 @@ package com.example.configuration.screens.misEmprendimientos
 import androidx.compose.runtime.Composable
 
 @Composable
-fun createEmprendimiento(){
+fun UserEmprendimientos(
+    onCreateEmprenClick: () -> Unit = {},
+    onEmprenClick: () -> Unit = {}
+) {
 
 }

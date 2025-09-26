@@ -61,6 +61,18 @@ class UserModel(private val repository: UserRepository) : ViewModel() {
         return repository.getCurrentUser()
     }
 
+    fun updateUser(user: User, onResult: (Boolean) -> Unit){
+        viewModelScope.launch {
+            val currentUser = getCurrentUser()
+            if (currentUser != null) {
+                repository.updateUser(user)
+                onResult(true)
+            } else {
+                onResult(false)
+            }
+        }
+    }
+
     fun logout() {
         viewModelScope.launch {
             repository.logout()
