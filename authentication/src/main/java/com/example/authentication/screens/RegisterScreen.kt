@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -131,13 +132,21 @@ fun RegisterFields(
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Ingrese su nombre completo") },
+            label = { Text("Ingrese su nombre completo",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold)
+                    },
             modifier = Modifier
                 .width(290.dp)
                 .heightIn(min = 56.dp)
                 .padding(bottom = 5.dp),
             singleLine = true,
-            shape = RoundedCornerShape(5.dp)
+            shape = RoundedCornerShape(5.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background
+            )
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -154,13 +163,21 @@ fun RegisterFields(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Ingrese un correo") },
+            label = { Text("Ingrese un correo",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold)
+                    },
             modifier = Modifier
                 .width(290.dp)
                 .heightIn(min = 56.dp)
                 .padding(bottom = 5.dp),
             singleLine = true,
-            shape = RoundedCornerShape(5.dp)
+            shape = RoundedCornerShape(5.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background
+            )
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -177,13 +194,21 @@ fun RegisterFields(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Ingrese una contraseña") },
+            label = { Text("Ingrese una contraseña",
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.Bold)
+                    },
             modifier = Modifier
                 .width(290.dp)
                 .heightIn(min = 56.dp)
                 .padding(bottom = 5.dp),
             singleLine = true,
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background
+            )
         )
 
         Spacer(modifier = Modifier.height(12.dp))

@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                     viewModelUser = viewModelUser,
                     vievModelEmprendimiento = viewModelEmprendimiento,
                     vievModelProducto = viewModelProducto,
-                    vievModelHistorial = viewModelHistorial
+                    viewModelHistorial = viewModelHistorial
                 )
             }
         }
