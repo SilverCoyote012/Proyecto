@@ -80,7 +80,7 @@ fun AppNavHost(
                 viewModel = viewModelEmprendimiento
             )
         }
-        composable("CrearEmprendimientos") { createEmprendimiento() }
+        composable("CrearEmprendimiento") { createEmprendimiento( onBackPage = { navController.popBackStack() } ) }
         composable("EmprendimientoProductos") {
             ProductosEmprendimiento(
                 onEditClick = { navController.navigate("EditProducto")},
