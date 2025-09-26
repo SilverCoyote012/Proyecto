@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data_core.database.Historial
-import com.example.data_core.database.HistorialDao
 import com.example.data_core.model.HistorialModel
 import com.example.ui_theme.ui.theme.ProyectoTheme
 
@@ -72,7 +71,7 @@ fun historialUsuario(onBackPage: () -> Unit = {}, viewModel: HistorialModel){
                     }
                 },
                 title = {
-                    Text("Historial de acciones", modifier = Modifier.fillMaxWidth(),
+                    Text("Historial de acciones", modifier = Modifier.fillMaxWidth().padding(end = 3.dp),
                         textAlign = TextAlign.Right,
                         style =
                             TextStyle(

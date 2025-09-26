@@ -25,12 +25,12 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "configuracionMenu"
+        startDestination = "SplashScreen"
     ) {
         composable("SplashScreen") { SplashScreen(navController) }
         composable("homeTest") { HomeTest(
             viewModel = viewModelUser,
-            onLogoutClick = { navController.navigate("login") }
+            onLogoutClick = { navController.navigate("SplashScreen") }
         ) }
         composable("login") { LoginScreen(
             viewModel = viewModelUser,
@@ -53,15 +53,17 @@ fun AppNavHost(
         composable("configuracionMenu") {
             MenuConfig (
                 onNavigateBack = {  },
+                onLogOut = { navController.navigate("SplashScreen") },
                 onPerfilClick = { navController.navigate("EditarUsuario") },
                 onEmprendimientosClick = { navController.navigate("UsuarioEmprendimientos") },
                 onHistorialClick = { navController.navigate("HistorialUser") },
-                onConfigClick = { navController.navigate("Configuracion") }
+                onConfigClick = { navController.navigate("Configuracion") },
+                viewModel = viewModelUser
             )
         }
         composable("Configuracion") { configuracionApp() }
         composable("HistorialUser") { historialUsuario( onBackPage = { navController.popBackStack()}, viewModel = viewModelHistorial ) }
-        composable("EditarUsuario") { editUser() }
+        composable("EditarUsuario") { editUser(onBackPage = { navController.popBackStack()}, viewModel = viewModelUser) }
 
         composable("UsuarioEmprendimientos") {
             UserEmprendimientos(

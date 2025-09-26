@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -25,11 +28,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.data_core.model.UserModel
 import com.example.ui_theme.ui.theme.ProyectoTheme
 
 
@@ -37,10 +42,12 @@ import com.example.ui_theme.ui.theme.ProyectoTheme
 @Composable
 fun MenuConfig(
     onNavigateBack: () -> Unit = {},
+    onLogOut: () -> Unit = {},
     onPerfilClick: () -> Unit = {},
     onEmprendimientosClick: () -> Unit = {},
     onHistorialClick: () -> Unit = {},
-    onConfigClick: () -> Unit = {}
+    onConfigClick: () -> Unit = {},
+    viewModel: UserModel
 ) {
     Scaffold(
         modifier = Modifier
@@ -73,7 +80,7 @@ fun MenuConfig(
     { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize().fillMaxWidth()
                 .padding(innerPadding).padding(12.dp)
                 .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -175,14 +182,27 @@ fun MenuConfig(
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = {
+                    viewModel.logout()
+                    onLogOut() },
+                modifier = Modifier.width(277.dp).padding(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onTertiary),
+                shape = RoundedCornerShape(7.dp)
+            ) {
+                Text("Cerrar sesión", fontWeight = FontWeight.SemiBold, color = Color.White)
+            }
         }
     }
 }
 
-@Preview(showBackground = true/*, showSystemUi = true*/)
-@Composable
-fun muestra() {
-    ProyectoTheme(darkTheme = false) {
-        MenuConfig()
-    }
-}
+//@Preview(showBackground = true/*, showSystemUi = true*/)
+//@Composable
+//fun muestra() {
+//    ProyectoTheme(darkTheme = false) {
+//        MenuConfig()
+//    }
+//}
