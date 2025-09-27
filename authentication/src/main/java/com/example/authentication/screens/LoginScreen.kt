@@ -96,7 +96,6 @@ fun LoginFields(
                     idToken = idToken
                 ) { success ->
                     if (success) onLoginSuccess()
-                    else Toast.makeText(context, "Error al ingresar con Google", Toast.LENGTH_SHORT).show()
                 }
             }
         } catch (_: Exception) { }
@@ -167,14 +166,11 @@ fun LoginFields(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // --- Login con Email y Password ---
         Button(
             onClick = {
                 when {
-                    email.isBlank() || password.isBlank() ->
-                        Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
-                    !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() ->
-                        Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
+                    email.isBlank() || password.isBlank() -> Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
+                    !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
                     else -> {
                         viewModel.loginWithEmailAndPassword(
                             context = context,
@@ -188,7 +184,6 @@ fun LoginFields(
                             )
                         ) { success ->
                             if (success) onLoginSuccess()
-                            else Toast.makeText(context, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -201,7 +196,6 @@ fun LoginFields(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Login con Google ---
         Button(
             onClick = {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

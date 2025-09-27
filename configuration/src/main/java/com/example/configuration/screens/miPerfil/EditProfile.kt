@@ -1,5 +1,6 @@
 package com.example.configuration.screens.miPerfil
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
@@ -49,7 +50,7 @@ import com.example.data_core.model.UserModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
+fun EditUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
     var name by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var editName by remember { mutableStateOf(false) }
@@ -63,6 +64,9 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
             val user = viewModel.getCurrentUser()
             if (user != null) {
                 userState = user
+
+                name = user.name
+                password = user.password
             } else {
                 hasError = "No se pudo cargar el usuario"
             }
@@ -164,10 +168,24 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                             )
                             IconButton(
                                 onClick = {
-                                    if (!name.isBlank()){
+                                    when {
+                                        name.isBlank() -> Toast.makeText(context, "Campo vacio", Toast.LENGTH_SHORT).show()
+                                        name.length < 3 -> Toast.makeText(context, "Debe tener al menos 3 caracteres", Toast.LENGTH_SHORT).show()
+                                        name == userState?.name -> Toast.makeText(context, "No se realizaron cambios", Toast.LENGTH_SHORT).show()
 
-                                    }else{
-                                        Toast.makeText(context, "Campo vacio", Toast.LENGTH_SHORT).show()
+                                        else -> {
+                                            viewModel.changeName(userState!!, name) { success ->
+                                                if (success) {
+                                                    Toast.makeText(context, "Nombre cambiado", Toast.LENGTH_SHORT).show()
+                                                    editName = false
+
+                                                    userState = userState?.copy(name = name)
+                                                    name = userState?.name ?: ""
+                                                } else {
+                                                    Toast.makeText(context, "Error al cambiar el nombre", Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
+                                        }
                                     }
                                 },
                                 modifier = Modifier.size(25.dp))
@@ -274,23 +292,30 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                             )
                             IconButton(
                                 onClick = {
-                                    when {
-                                        typeUser == "email" -> editPass = !editPass
-                                        password.isBlank() -> Toast.makeText(context, "Campo vacio", Toast.LENGTH_SHORT).show()
-                                        password.length < 8 -> Toast.makeText(context, "Debe tener al menos 8 caracteres", Toast.LENGTH_SHORT).show()
+                                    Log.d("DEBUG", "Click on done button")
+                                    if (typeUser == "email") {
+                                        when {
+                                            password.isBlank() -> Toast.makeText(context, "Campo vacio", Toast.LENGTH_SHORT).show()
+                                            password.length < 8 -> Toast.makeText(context, "Debe tener al menos 8 caracteres", Toast.LENGTH_SHORT).show()
+                                            password == userState?.password -> Toast.makeText(context, "No se realizaron cambios", Toast.LENGTH_SHORT).show()
 
-                                        else -> {
-                                            viewModel.changePassword(userState!!, password) { success ->
-                                                if (success) {
-                                                    Toast.makeText(context, "Contraseña cambiada", Toast.LENGTH_SHORT).show()
-                                                } else {
-                                                    Toast.makeText(context, "Error al cambiar la contraseña", Toast.LENGTH_SHORT).show()
+                                            else -> {
+                                                viewModel.changePassword(userState!!, password) { success ->
+                                                    if (success) {
+                                                        Toast.makeText(context, "Contraseña cambiada", Toast.LENGTH_SHORT).show()
+                                                        editPass = false
+
+                                                        userState = userState?.copy(name = name)
+                                                        password = userState?.password ?: ""
+                                                    } else {
+                                                        Toast.makeText(context, "Error al cambiar la contraseña", Toast.LENGTH_SHORT).show()
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 },
-                                enabled = typeUser == "google",
+                                enabled = typeUser == "email",
                                 modifier = Modifier.size(25.dp)
                             ) {
                                 Icon(

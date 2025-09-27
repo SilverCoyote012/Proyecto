@@ -73,7 +73,7 @@ fun AppNavHost(
             )
         }
         composable("HistorialUser") { historialUsuario( onBackPage = { navController.popBackStack()}, viewModel = viewModelHistorial ) }
-        composable("EditarUsuario") { editUser( onBackPage = { navController.popBackStack()}, viewModel = viewModelUser) }
+        composable("EditarUsuario") { EditUser( onBackPage = { navController.popBackStack()}, viewModel = viewModelUser) }
 
         composable("UsuarioEmprendimientos") {
             UserEmprendimientos(

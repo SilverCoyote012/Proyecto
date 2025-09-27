@@ -101,6 +101,17 @@ class UserModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
+    fun changeName(user: User, newName: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                repository.changeName(user, newName)
+                onResult(true)
+            } catch (e: Exception) {
+                onResult(false)
+            }
+        }
+    }
+
     fun changePassword(user: User, newPassword: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
             try {

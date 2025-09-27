@@ -98,6 +98,14 @@ class UserRepository (
         }
     }
 
+    suspend fun changeName(user: User, newName: String) {
+        try {
+            firebaseService.changeName(user, newName)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
     suspend fun changePassword(user: User, newPassword: String) {
         try {
             firebaseService.changePassword(user, newPassword)

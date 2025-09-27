@@ -61,8 +61,6 @@ class FirebaseServiceUser(
         onResult: (Boolean) -> Unit
     ): Boolean {
         return try {
-            Firebase.auth.signOut()
-
             val actionManager = ActionManager(context)
             actionManager.executeAction(
                 lifecycleOwner = lifecycleOwner,
@@ -87,9 +85,6 @@ class FirebaseServiceUser(
         onResult: (Boolean) -> Unit
     ): Boolean {
         return try {
-
-            Firebase.auth.signOut()
-
             val actionManager = ActionManager(context)
             actionManager.executeAction(
                 lifecycleOwner = lifecycleOwner,
@@ -113,7 +108,6 @@ class FirebaseServiceUser(
         onResult: (Boolean) -> Unit
     ): Boolean {
         return try {
-            Firebase.auth.signOut()
             val actionManager = ActionManager(context)
             actionManager.executeAction(
                 lifecycleOwner = lifecycleOwner,
@@ -136,8 +130,6 @@ class FirebaseServiceUser(
         onResult: (Boolean) -> Unit
     ): Boolean {
         return try {
-            Firebase.auth.signOut()
-
             val actionManager = ActionManager(context)
             actionManager.executeAction(
                 lifecycleOwner = lifecycleOwner,
@@ -160,20 +152,40 @@ class FirebaseServiceUser(
         return user
     }
 
-    suspend fun changePassword(user: User, newPassword: String) {
-        val userRef = collection.document(user.id)
-        try {
-            userRef.update("password", newPassword).await()
+    suspend fun changeName(user: User, newName: String) {
+        Log.d("DEBUG", "Changing name for user: $user")
+        val currentUser = Firebase.auth.currentUser
+        Log.d("DEBUG", "User: ${currentUser?.displayName}")
+        if (currentUser != null) {
+            Log.d("DEBUG", "Changing name for user: $user")
+            collection.document(currentUser.uid).update("name", newName).await()
+            Log.d("DEBUG", "Name changed successfully")
+        }
 
-            val authUser = Firebase.auth.currentUser
-            authUser?.updatePassword(newPassword)?.await()
 
-            user.password = newPassword
-            userRef.set(user.toMap()).await()
-        } catch (e: Exception) {
-            throw e
     }
-}
+
+    suspend fun changePassword(user: User, newPassword: String) {
+        Log.d("DEBUG", "Changing password for user: $user")
+        val currentUser = Firebase.auth.currentUser
+        Log.d("DEBUG", "User: ${currentUser?.displayName}")
+        if (currentUser != null) {
+            currentUser.updatePassword(newPassword)
+            Log.d("DEBUG", "Password changed successfully in Firebase Auth")
+            Log.d("DEBUG", "${currentUser.uid}, ${currentUser.displayName}, ${currentUser.email}, ${newPassword}")
+
+            val updatedUser = User(
+                id = currentUser.uid,
+                name = user.name,
+                email = user.email,
+                password = newPassword,
+                authType = "email"
+            )
+
+            collection.document(currentUser.uid).set(updatedUser.toMap()).await()
+            Log.d("DEBUG", "Password changed successfully")
+        }
+    }
 
     suspend fun logout() {
         Firebase.auth.signOut()
