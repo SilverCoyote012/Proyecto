@@ -61,11 +61,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.data_core.database.Emprendimiento
+import com.example.data_core.database.Historial
 import com.example.data_core.database.User
 import com.example.data_core.model.EmprendimientoModel
+import com.example.data_core.model.HistorialModel
 import com.example.data_core.model.UserModel
 import com.example.ui_theme.ui.theme.PinkBrown_themeLight
 import com.example.ui_theme.ui.theme.ProyectoTheme
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 @Composable
 fun cardEmprendimientoUser(
@@ -132,7 +137,8 @@ fun UserEmprendimientos(
     onCreateEmprenClick: () -> Unit = {},
     onEmprenClick: (String) -> Unit,
     viewModel: EmprendimientoModel,
-    viewModelUser: UserModel
+    viewModelUser: UserModel,
+    viewModelAccion: HistorialModel,
 ) {
     var userState by remember { mutableStateOf<User?>(null) }
     var hasError by remember { mutableStateOf("") }
@@ -158,6 +164,7 @@ fun UserEmprendimientos(
 
     val SnackBarHostState = remember { SnackbarHostState() }
     var deleteEmpren by remember { mutableStateOf<Emprendimiento?>(null) }
+    val fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
     deleteEmpren?.let{ emprendimiento ->
         LaunchedEffect(emprendimiento) {
@@ -167,6 +174,8 @@ fun UserEmprendimientos(
             )
             if ( result == SnackbarResult.ActionPerformed){
                 viewModel.addEmprendimiento(emprendimiento)
+                val accion = "Recupero el emprendimiento '${emprendimiento.nombreEmprendimiento}'"
+                viewModelAccion.addHistorial( Historial( idUsuario = emprendimiento.idUsuario, accion = accion, fecha = fecha))
             }
             deleteEmpren = null
         }
@@ -208,7 +217,7 @@ fun UserEmprendimientos(
             modifier = Modifier.padding(innerPadding)
                     .padding(2.dp).fillMaxWidth().fillMaxSize()
         ){
-            if (emprendimientos.isEmpty()) {
+            if (emprendUsuario.isEmpty()) {
                 Text(
                     text = "No tienes emprendimientos registrados.",
                     style = TextStyle(
@@ -222,7 +231,7 @@ fun UserEmprendimientos(
                 LazyColumn(
                     modifier = Modifier.padding(2.dp)
                 ) {
-                    items(emprendimientos, key = { it.id }){emprendimiento ->
+                    items(emprendUsuario, key = { it.id }){emprendimiento ->
                         var visible by remember { mutableStateOf(true)}
                         AnimatedVisibility(
                             visible = visible,
@@ -235,6 +244,8 @@ fun UserEmprendimientos(
                                         visible = false
                                         viewModel.deleteEmprendimiento(emprendimiento)
                                         deleteEmpren = emprendimiento
+                                        val accion = "Elimino el emprendimiento '${emprendimiento.nombreEmprendimiento}'"
+                                        viewModelAccion.addHistorial( Historial( idUsuario = emprendimiento.idUsuario, accion = accion, fecha = fecha))
                                         true
                                     }
                                     false

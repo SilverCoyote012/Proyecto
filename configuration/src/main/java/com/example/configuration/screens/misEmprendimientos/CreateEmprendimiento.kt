@@ -46,17 +46,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data_core.database.Emprendimiento
+import com.example.data_core.database.Historial
 import com.example.data_core.database.User
 import com.example.data_core.model.EmprendimientoModel
+import com.example.data_core.model.HistorialModel
 import com.example.data_core.model.UserModel
 import com.example.ui_theme.ui.theme.ProyectoTheme
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun createEmprendimiento(
     onBackPage: () -> Unit = {},
     viewModel: EmprendimientoModel,
-    viewModelUser: UserModel
+    viewModelUser: UserModel,
+    viewModelAccion: HistorialModel
 ){
     var userState by remember { mutableStateOf<User?>(null) }
     var hasError by remember { mutableStateOf("") }
@@ -392,6 +397,10 @@ fun createEmprendimiento(
                                         Emprendimiento(
                                             idUsuario = userState?.id ?: hasError, nombreEmprendimiento = name,
                                             imagen = image, telefono = phone, descripcion = descripcion, categoria = selectCategoria)
+                                    )
+                                    val fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                                    val accion = "Creación de emprendimiento '$name'"
+                                    viewModelAccion.addHistorial( Historial( idUsuario = userState?.id ?: hasError, accion = accion, fecha = fecha)
                                     )
                                     onBackPage()
                                 } catch (_: Exception) { }

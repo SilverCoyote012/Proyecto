@@ -65,8 +65,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.data_core.database.Emprendimiento
+import com.example.data_core.database.Historial
 import com.example.data_core.database.Producto
 import com.example.data_core.model.EmprendimientoModel
+import com.example.data_core.model.HistorialModel
 import com.example.data_core.model.ProductoModel
 import com.example.data_core.repository.EmprendimientoRepository
 import com.example.data_core.repository.ProductoRepository
@@ -74,6 +76,9 @@ import com.example.ui_theme.ui.theme.PinkBrown_themeLight
 import com.example.ui_theme.ui.theme.ProyectoTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 @Composable
 fun cardProductoEdit(
@@ -158,6 +163,7 @@ fun ProductosEmprendimiento(
     idEmpren: String,
     viewModel: ProductoModel,
     viewModelEmpren: EmprendimientoModel,
+    viewModelAccion: HistorialModel,
     onBackPage: () -> Unit = {},
     onCreateEditClick: (Producto?) -> Unit = {}
 ){
@@ -174,6 +180,7 @@ fun ProductosEmprendimiento(
 
     val SnackBarHostState = remember { SnackbarHostState() }
     var deleteProduct by remember { mutableStateOf<Producto?>(null) }
+    val fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 
     deleteProduct?.let{ producto ->
         LaunchedEffect(producto) {
@@ -183,6 +190,8 @@ fun ProductosEmprendimiento(
             )
             if ( result == SnackbarResult.ActionPerformed){
                 viewModel.addProducto(producto)
+                val accion = "Recupero el producto '${producto.nombreProducto}' en emprendimiento '$nameEmpren"
+                viewModelAccion.addHistorial( Historial( idUsuario = emprenSelect?.idUsuario ?: UUID.randomUUID().toString(), accion = accion, fecha = fecha))
             }
             deleteProduct = null
         }
@@ -277,6 +286,8 @@ fun ProductosEmprendimiento(
                                          visible = false
                                          viewModel.deleteProducto(producto)
                                          deleteProduct = producto
+                                         val accion = "Elimino el producto '${producto.nombreProducto}' del emprendimiento '$nameEmpren"
+                                         viewModelAccion.addHistorial( Historial( idUsuario = emprenSelect?.idUsuario ?: UUID.randomUUID().toString(), accion = accion, fecha = fecha))
                                          true
                                      }
                                      false
