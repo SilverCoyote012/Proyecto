@@ -25,9 +25,9 @@ fun AuthenticationNavMenu(
 ){
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .width(290.dp)
             .background(MaterialTheme.colorScheme.secondary),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.Center,
     ) {
         TextButton(onClick = onLoginClick) {
             Column() {

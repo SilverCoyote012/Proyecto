@@ -72,7 +72,7 @@ fun AppNavHost(
                 onSelectModo = { nuevoModo -> onSelectModo(nuevoModo) }
             )
         }
-        composable("HistorialUser") { historialUsuario( onBackPage = { navController.popBackStack()}, viewModel = viewModelHistorial ) }
+        composable("HistorialUser") { historialUsuario( onBackPage = { navController.popBackStack()}, viewModel = viewModelHistorial, viewModelUser = viewModelUser ) }
         composable("EditarUsuario") { EditUser( onBackPage = { navController.popBackStack()}, viewModel = viewModelUser) }
 
         composable("UsuarioEmprendimientos") {
@@ -83,13 +83,14 @@ fun AppNavHost(
                     navController.navigate("EmprendimientoProductos/$idEmprendimiento")
                 },
                 viewModel = viewModelEmprendimiento,
-                viewModelUser = viewModelUser
+                viewModelUser = viewModelUser,
+                viewModelAccion = viewModelHistorial
             )
         }
         composable("CrearEmprendimiento") {
             createEmprendimiento(
                 onBackPage = { navController.popBackStack() },
-                viewModel = viewModelEmprendimiento, viewModelUser = viewModelUser
+                viewModel = viewModelEmprendimiento, viewModelUser = viewModelUser, viewModelAccion = viewModelHistorial
             )
         }
 
@@ -101,6 +102,7 @@ fun AppNavHost(
                 idEmpren = idEmprendimiento,
                 viewModel = viewModelProducto,
                 viewModelEmpren = viewModelEmprendimiento,
+                viewModelAccion = viewModelHistorial,
                 onBackPage = { navController.popBackStack() },
                 onCreateEditClick = { producto ->
                     viewModelProducto.productEdit.value = producto
@@ -118,6 +120,7 @@ fun AppNavHost(
             CreateEditProducto(
                 viewModel = viewModelProducto,
                 viewModelEmpren = viewModelEmprendimiento,
+                viewModelAccion = viewModelHistorial,
                 existingProduct = existingProduct, // puede ser null
                 idEmpren = idEmprendimiento,
                 onBackPage = { navController.popBackStack() }

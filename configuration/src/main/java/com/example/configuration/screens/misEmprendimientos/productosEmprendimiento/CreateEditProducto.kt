@@ -49,10 +49,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.data_core.database.Emprendimiento
+import com.example.data_core.database.Historial
 import com.example.data_core.database.Producto
 import com.example.data_core.model.EmprendimientoModel
+import com.example.data_core.model.HistorialModel
 import com.example.data_core.model.ProductoModel
 import com.example.ui_theme.ui.theme.ProyectoTheme
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +66,8 @@ fun CreateEditProducto(
     viewModel: ProductoModel,
     existingProduct: Producto? = null,
     idEmpren: String,
-    viewModelEmpren: EmprendimientoModel
+    viewModelEmpren: EmprendimientoModel,
+    viewModelAccion: HistorialModel
 ){
     val emprenSelect by viewModelEmpren.emprendimientoSelect.collectAsState()
     LaunchedEffect(idEmpren) {
@@ -336,11 +341,15 @@ fun CreateEditProducto(
                                 else -> {
                                     try {
                                         val producto = Producto(id = existingProduct?.id ?: UUID.randomUUID().toString(), idEmprendimiento = idEmpren, nombreProducto = nameProduct, descripcion = descripProduct, imagen = imagenProduct, precio = costoProduct)
-
+                                        val fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
                                         if (existingProduct == null){
                                             viewModel.addProducto(producto)
+                                            val accion = "Creación de producto '$nameProduct' en emprendimiento '$nameEmpren"
+                                            viewModelAccion.addHistorial( Historial( idUsuario = emprenSelect?.idUsuario ?: UUID.randomUUID().toString(), accion = accion, fecha = fecha))
                                         }else{
                                             viewModel.updateProducto(producto)
+                                            val accion = "Actualizo producto '$nameProduct' del emprendimiento '$nameEmpren"
+                                            viewModelAccion.addHistorial( Historial( idUsuario = emprenSelect?.idUsuario ?: UUID.randomUUID().toString(), accion = accion, fecha = fecha))
                                         }
                                         onBackPage()
                                     } catch (_: Exception) { }
