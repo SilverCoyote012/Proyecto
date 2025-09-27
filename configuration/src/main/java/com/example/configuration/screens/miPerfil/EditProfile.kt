@@ -151,7 +151,7 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                                     )
                                 },
                                 modifier = Modifier
-                                    .width(350.dp)
+                                    .weight(1f)
                                     .heightIn(min = 50.dp)
                                     .padding(start = 10.dp, bottom = 10.dp, end = 10.dp),
                                 singleLine = true,
@@ -261,7 +261,7 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                                     )
                                         },
                                 modifier = Modifier
-                                    .width(390.dp)
+                                    .weight(1f)
                                     .heightIn(min = 50.dp)
                                     .padding(start = 10.dp, bottom = 10.dp, end = 10.dp),
                                 singleLine = true,
@@ -296,7 +296,7 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                                 Icon(
                                     imageVector = Icons.Default.Done,
                                     contentDescription = "Editar",
-                                    modifier = Modifier.size(25.dp),
+                                    modifier = Modifier.size(25.dp).weight(1f),
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                                 )
                             }
