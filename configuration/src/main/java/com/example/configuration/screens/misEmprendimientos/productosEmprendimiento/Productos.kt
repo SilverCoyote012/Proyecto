@@ -162,15 +162,15 @@ fun ProductosEmprendimiento(
     onCreateEditClick: (Producto?) -> Unit = {}
 ){
     val emprendimiento by viewModelEmpren.emprendimiento.collectAsState()
-    val productos by viewModel.producto.collectAsState()
-
     val emprenSelect = emprendimiento.find { idEmpren == it.id }
     val nameEmpren = emprenSelect?.nombreEmprendimiento ?: "Error en obtención de datos"
     val imageEmpren = emprenSelect?.imagen ?: "Error en obtención de imagen"
-
     LaunchedEffect(idEmpren) {
         idEmpren.let { viewModel.getProductoByEmprendimientoId(it) }
     }
+
+    val productos by viewModel.producto.collectAsState()
+    val productosEmpren = productos.filter { it.idEmprendimiento == idEmpren }
 
     val SnackBarHostState = remember { SnackbarHostState() }
     var deleteProduct by remember { mutableStateOf<Producto?>(null) }
@@ -264,7 +264,7 @@ fun ProductosEmprendimiento(
                  )
              }else{
                  LazyColumn( modifier = Modifier.padding(2.dp).padding(top = 210.dp)) {
-                     items(productos, key = { it.id } ){ producto ->
+                     items(productosEmpren, key = { it.id } ){ producto ->
                          var visible by remember { mutableStateOf(true)}
                          AnimatedVisibility(
                              visible = visible,

@@ -186,12 +186,18 @@ class ProductoModel(private val repository: ProductoRepository) : ViewModel() {
     fun addProducto(producto: Producto) {
         viewModelScope.launch {
             repository.insert(producto)
+            _producto.value = _producto.value.map {
+                if (it.id == producto.id) producto else it
+            }
         }
     }
 
     fun updateProducto(producto: Producto) {
         viewModelScope.launch {
             repository.update(producto)
+            _producto.value = _producto.value.map {
+                if (it.id == producto.id) producto else it
+            }
         }
     }
 

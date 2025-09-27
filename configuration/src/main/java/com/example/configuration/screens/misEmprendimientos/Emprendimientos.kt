@@ -150,6 +150,7 @@ fun UserEmprendimientos(
     }
 
     val emprendimientos by viewModel.emprendimiento.collectAsState()
+    val emprendUsuario = emprendimientos.filter { it.idUsuario == userState?.id }
 
     LaunchedEffect(userState) {
         userState?.id?.let { viewModel.getEmprendimientosByUserId(it) }

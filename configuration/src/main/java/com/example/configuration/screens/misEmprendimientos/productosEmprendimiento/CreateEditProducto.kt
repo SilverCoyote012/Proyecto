@@ -53,6 +53,7 @@ import com.example.data_core.database.Producto
 import com.example.data_core.model.EmprendimientoModel
 import com.example.data_core.model.ProductoModel
 import com.example.ui_theme.ui.theme.ProyectoTheme
+import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -334,7 +335,7 @@ fun CreateEditProducto(
                                 }
                                 else -> {
                                     try {
-                                        val producto = Producto(idEmprendimiento = idEmpren, nombreProducto = nameProduct, descripcion = descripProduct, imagen = imagenProduct, precio = costoProduct)
+                                        val producto = Producto(id = existingProduct?.id ?: UUID.randomUUID().toString(), idEmprendimiento = idEmpren, nombreProducto = nameProduct, descripcion = descripProduct, imagen = imagenProduct, precio = costoProduct)
 
                                         if (existingProduct == null){
                                             viewModel.addProducto(producto)
