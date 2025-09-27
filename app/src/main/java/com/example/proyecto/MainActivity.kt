@@ -10,6 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import com.example.data_core.database.DataBase
 import com.example.data_core.firebase.FirebaseServiceEmprendimiento
 import com.example.data_core.firebase.FirebaseServiceHistorial
@@ -59,6 +61,8 @@ class MainActivity : ComponentActivity() {
         )
         val viewModelFactoryHistorial = HistorialModelFactory(HistorialRepository)
         val viewModelHistorial = ViewModelProvider(this, viewModelFactoryHistorial)[HistorialModel::class.java]
+
+
 
         setContent {
             var selectModo by remember { mutableStateOf(false)  }

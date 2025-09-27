@@ -8,9 +8,9 @@ import java.util.UUID
 @Entity
 data class User(
     @PrimaryKey val id: String,
-    val name: String,
+    var name: String,
     val email: String,
-    val password: String,
+    var password: String,
     val authType: String
 ){
     fun toMap(): Map<String, Any?> = mapOf(
