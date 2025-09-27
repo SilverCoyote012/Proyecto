@@ -228,7 +228,13 @@ fun RegisterFields(
                     }
                     else -> {
                         try {
-                            viewModel.registerWithEmailAndPassword(User(name = name, email = email, password = password)) {
+                            viewModel.registerWithEmailAndPassword(User(
+                                id = "",
+                                name = name,
+                                email = email,
+                                password = password,
+                                authType = "email"
+                            )) {
                                 success ->
                                 if (success) {
                                     Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()

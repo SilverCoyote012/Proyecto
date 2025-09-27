@@ -42,8 +42,8 @@ class UserRepository (
 
     suspend fun loginWithEmailAndPassword(user: User): Boolean {
         return try {
-            firebaseService.loginWithEmailAndPassword(user)
-            true
+            val success = firebaseService.loginWithEmailAndPassword(user)
+            success
         } catch (_: Exception) {
             false
         }

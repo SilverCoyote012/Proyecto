@@ -7,16 +7,18 @@ import java.util.UUID
 
 @Entity
 data class User(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    @PrimaryKey val id: String,
     val name: String,
     val email: String,
-    val password: String
+    val password: String,
+    val authType: String
 ){
     fun toMap(): Map<String, Any?> = mapOf(
         "id" to id,
         "name" to name,
         "email" to email,
-        "password" to password
+        "password" to password,
+        "authType" to authType
     )
 
     companion object {
@@ -24,7 +26,8 @@ data class User(
             id = data["id"] as String,
             name = data["name"] as String,
             email = data["email"] as String,
-            password = data["password"] as String
+            password = data["password"] as String,
+            authType = data["authType"] as String
         )
     }
 }

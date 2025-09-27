@@ -26,9 +26,7 @@ class FirebaseServiceUser(
         }
     }
 
-    suspend fun createUser(user: User){
-        collection.document(user.id).set(user.toMap()).await()
-    }
+
 
     suspend fun updateUser(user: User){
         collection.document(user.id).set(user.toMap()).await()
@@ -36,7 +34,18 @@ class FirebaseServiceUser(
 
     suspend fun registerWithEmailAndPassword(user: User): Boolean {
         return try {
-            Firebase.auth.createUserWithEmailAndPassword(user.email, user.password)
+            val authResul = Firebase.auth.createUserWithEmailAndPassword(user.email, user.password).await()
+
+            val uid = authResul.user?.uid ?: ""
+            val user = User(
+                id = uid,
+                name = user.name,
+                email = user.email,
+                password = user.password,
+                authType = "email"
+            )
+
+            collection.document(uid).set(user.toMap()).await()
             true
         } catch (_: Exception) {
             false
@@ -46,7 +55,18 @@ class FirebaseServiceUser(
     suspend fun registerWithGoogleAuthentication(idToken: String): Boolean {
         return try {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
-            Firebase.auth.signInWithCredential(credential).await()
+            val authResul = Firebase.auth.signInWithCredential(credential).await()
+
+            val uid = authResul.user?.uid ?: ""
+            val user = User(
+                id = uid,
+                name = authResul.user?.displayName ?: "",
+                email = authResul.user?.email ?: "",
+                password = "",
+                authType = "google"
+            )
+
+            collection.document(uid).set(user.toMap()).await()
             true
         } catch (e: Exception) {
             false
@@ -55,6 +75,7 @@ class FirebaseServiceUser(
 
     suspend fun loginWithEmailAndPassword(user: User): Boolean {
         return try {
+            Firebase.auth.signOut()
             Firebase.auth.signInWithEmailAndPassword(user.email, user.password).await()
             true
         } catch (e: Exception) {
@@ -66,6 +87,22 @@ class FirebaseServiceUser(
         return try {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
             Firebase.auth.signInWithCredential(credential).await()
+
+            val uid = Firebase.auth.currentUser?.uid ?: ""
+            val user = User(
+                id = uid,
+                name = Firebase.auth.currentUser?.displayName ?: "",
+                email = Firebase.auth.currentUser?.email ?: "",
+                password = "",
+                authType = "google"
+            )
+
+            val existingUser = collection.document(uid).get().await().toObject(User::class.java)
+            if (existingUser != null) {
+                collection.document(uid).set(user.toMap()).await()
+            } else {
+                collection.document(uid).set(user.toMap()).await()
+            }
             true
         } catch (e: Exception) {
             false
@@ -74,12 +111,21 @@ class FirebaseServiceUser(
 
     suspend fun getCurrentUser(): User? {
         val firebaseUser = Firebase.auth.currentUser
+        val providers = firebaseUser?.providerData?.map { it.providerId }
+        val isGoogle = providers?.contains("google.com") == true
+        val isEmailPassword = providers?.contains("password") == true
+
         return if (firebaseUser != null) {
             User(
                 id = firebaseUser.uid,
                 name = firebaseUser.displayName ?: "",
                 email = firebaseUser.email ?: "",
-                password = ""
+                password = "",
+                authType = when {
+                    isGoogle -> "google"
+                    isEmailPassword -> "email"
+                    else -> "unknown"
+                }
             )
         } else {
             null
