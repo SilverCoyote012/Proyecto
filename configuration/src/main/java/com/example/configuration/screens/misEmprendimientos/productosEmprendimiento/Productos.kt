@@ -64,27 +64,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.data_core.database.Emprendimiento
 import com.example.data_core.database.Producto
 import com.example.data_core.model.EmprendimientoModel
 import com.example.data_core.model.ProductoModel
+import com.example.data_core.repository.EmprendimientoRepository
+import com.example.data_core.repository.ProductoRepository
 import com.example.ui_theme.ui.theme.PinkBrown_themeLight
 import com.example.ui_theme.ui.theme.ProyectoTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 
 @Composable
 fun cardProductoEdit(
     producto: Producto,
-    onEditClick: () -> Unit = {},
+    onEditClick: (Producto) -> Unit = { },
     swipeState: SwipeToDismissBoxState
 ){
     SwipeToDismissBox(
         state = swipeState,
         modifier = Modifier
-            .height(180.dp).padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 20.dp)
+            .fillMaxWidth().padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 20.dp)
             .clip(RoundedCornerShape(16.dp)),
         backgroundContent = {
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "Eliminar emprendimiento",
+                contentDescription = "Eliminar producto",
                 modifier = Modifier
                     .fillMaxWidth().fillMaxSize()
                     .background(MaterialTheme.colorScheme.onTertiary)
@@ -94,18 +99,18 @@ fun cardProductoEdit(
         }
     ) {
         Card(
-            modifier = Modifier.padding(15.dp).fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground)
         )
         {
             Row(
-                modifier = Modifier.padding(15.dp).fillMaxWidth()
+                modifier = Modifier.padding(10.dp).fillMaxWidth()
             ) {
                 AsyncImage(
                     model = producto.imagen,
-                    contentDescription = "Imagen del negocio",
+                    contentDescription = "Imagen del producto",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.height(80.dp).size(100.dp)
+                    modifier = Modifier.height(80.dp).size(100.dp).clip(RoundedCornerShape(5.dp))
                 )
                 Column(modifier = Modifier.fillMaxWidth().padding(start = 4.dp, 2.dp)) {
                     Text(
@@ -116,7 +121,7 @@ fun cardProductoEdit(
                     )
                     Text(
                         producto.descripcion,
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp), style = TextStyle(lineHeight = 15.sp),
                         fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -129,7 +134,7 @@ fun cardProductoEdit(
                             color = MaterialTheme.colorScheme.tertiary,
                         )
                         IconButton(
-                            onClick = { onEditClick() },
+                            onClick = { onEditClick(producto) },
                             modifier = Modifier.size(25.dp)
                         )
                         {
@@ -154,7 +159,7 @@ fun ProductosEmprendimiento(
     viewModel: ProductoModel,
     viewModelEmpren: EmprendimientoModel,
     onBackPage: () -> Unit = {},
-    onCreateEditClick: () -> Unit = {}
+    onCreateEditClick: (Producto?) -> Unit = {}
 ){
     val emprendimiento by viewModelEmpren.emprendimiento.collectAsState()
     val productos by viewModel.producto.collectAsState()
@@ -258,7 +263,7 @@ fun ProductosEmprendimiento(
                          .padding(top = 410.dp)
                  )
              }else{
-                 LazyColumn( modifier = Modifier.padding(2.dp)) {
+                 LazyColumn( modifier = Modifier.padding(2.dp).padding(top = 210.dp)) {
                      items(productos, key = { it.id } ){ producto ->
                          var visible by remember { mutableStateOf(true)}
                          AnimatedVisibility(
@@ -277,7 +282,9 @@ fun ProductosEmprendimiento(
                                      false
                                  }
                              )
-                             cardProductoEdit(producto = producto, onEditClick = onCreateEditClick, swipeState = dismissState)
+                             cardProductoEdit(
+                                 producto = producto, onEditClick = { onCreateEditClick(producto) }, swipeState = dismissState
+                             )
                          }
                      }
                  }
@@ -285,7 +292,7 @@ fun ProductosEmprendimiento(
              Spacer(modifier = Modifier.height(16.dp))
 
              FloatingActionButton(
-                 onClick = { onCreateEditClick() },
+                 onClick = { onCreateEditClick(null) },
                  containerColor = PinkBrown_themeLight,
                  contentColor = MaterialTheme.colorScheme.onPrimary,
                  modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
@@ -295,14 +302,3 @@ fun ProductosEmprendimiento(
          }
      }
 }
-
-
-//@Preview(showBackground = true/*, showSystemUi = true*/)
-//@Composable
-//fun muestra() {
-//    ProyectoTheme(darkTheme = false) {
-//        Column(modifier = Modifier.fillMaxSize()) {
-//            ProductosEmprendimiento()
-//        }
-//    }
-//}

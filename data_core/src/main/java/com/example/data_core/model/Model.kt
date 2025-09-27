@@ -83,7 +83,7 @@ class UserModel(private val repository: UserRepository) : ViewModel() {
 class EmprendimientoModel(private val repository: EmprendimientoRepository) : ViewModel() {
     private val _emprendimiento = MutableStateFlow<List<Emprendimiento>>(emptyList())
 
-    val emprendimiento: StateFlow<List<Emprendimiento>> = _emprendimiento.asStateFlow()
+    open val emprendimiento: StateFlow<List<Emprendimiento>> = _emprendimiento.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -114,12 +114,22 @@ class EmprendimientoModel(private val repository: EmprendimientoRepository) : Vi
     fun getEmprendimientosByUserId(userId: String): List<Emprendimiento> {
         return emprendimiento.value.filter { it.idUsuario == userId }
     }
+
+    private val _emprendimientoSelect = MutableStateFlow<Emprendimiento?>(null)
+    val emprendimientoSelect: StateFlow<Emprendimiento?> = _emprendimientoSelect.asStateFlow()
+
+    fun getEmprendimientoById(emprenId: String) {
+        val empr = _emprendimiento.value.find { it.id == emprenId }
+        _emprendimientoSelect.value = empr
+    }
 }
 
 class ProductoModel(private val repository: ProductoRepository) : ViewModel() {
     private val _producto = MutableStateFlow<List<Producto>>(emptyList())
 
     val producto: StateFlow<List<Producto>> = _producto.asStateFlow()
+
+    var productEdit = MutableStateFlow<Producto?>(null)
 
     init {
         viewModelScope.launch {

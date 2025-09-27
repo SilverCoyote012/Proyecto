@@ -1,6 +1,7 @@
 package com.example.proyecto.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -95,15 +96,32 @@ fun AppNavHost(
         composable("EmprendimientoProductos/{idEmprendimiento}",
             arguments = listOf(navArgument("idEmprendimiento") { type = NavType.StringType })
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("idEmprendimiento") ?: ""
+            val idEmprendimiento = backStackEntry.arguments?.getString("idEmprendimiento") ?: ""
             ProductosEmprendimiento(
-                idEmpren = id,
+                idEmpren = idEmprendimiento,
                 viewModel = viewModelProducto,
                 viewModelEmpren = viewModelEmprendimiento,
                 onBackPage = { navController.popBackStack() },
-                onCreateEditClick = { navController.navigate("Crear/EditarProducto") }
+                onCreateEditClick = { producto ->
+                    viewModelProducto.productEdit.value = producto
+                    navController.navigate("CrearEditarProducto/$idEmprendimiento")
+                }
             )
         }
-        composable("Crear/EditarProducto") { CreateEditProducto() }
+        composable(
+            "CrearEditarProducto/{idEmprendimiento}",
+            arguments = listOf(navArgument("idEmprendimiento") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val idEmprendimiento = backStackEntry.arguments?.getString("idEmprendimiento") ?: ""
+            val existingProduct = viewModelProducto.productEdit.collectAsState().value
+
+            CreateEditProducto(
+                viewModel = viewModelProducto,
+                viewModelEmpren = viewModelEmprendimiento,
+                existingProduct = existingProduct, // puede ser null
+                idEmpren = idEmprendimiento,
+                onBackPage = { navController.popBackStack() }
+            )
+        }
     }
 }
