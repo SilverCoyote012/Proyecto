@@ -146,6 +146,10 @@ class ProductoModel(private val repository: ProductoRepository) : ViewModel() {
             repository.delete(producto)
         }
     }
+
+    fun getProductoByEmprendimientoId(emprendimientoId: String): List<Producto> {
+        return producto.value.filter { it.idEmprendimiento == emprendimientoId }
+    }
 }
 
 class HistorialModel(private val repository: HistorialRepository) : ViewModel() {

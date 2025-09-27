@@ -3,11 +3,6 @@ package com.example.configuration.screens.misEmprendimientos.productosEmprendimi
 import androidx.compose.runtime.Composable
 
 @Composable
-fun EditarProducto(){
-
-}
-
-@Composable
-fun CrearProducto(){
+fun CreateEditProducto(){
 
 }

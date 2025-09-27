@@ -7,17 +7,12 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,8 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -77,13 +70,13 @@ import com.example.ui_theme.ui.theme.ProyectoTheme
 @Composable
 fun cardEmprendimientoUser(
     emprendimiento: Emprendimiento,
-    onEmprenClick: () -> Unit = {},
+    onEmprenClick: (String) -> Unit,
     swipeState: SwipeToDismissBoxState
 ){
     SwipeToDismissBox(
         state = swipeState,
         modifier = Modifier
-            .height(180.dp).padding(start = 10.dp, end = 10.dp, top = 25.dp, bottom = 15.dp)
+            .height(180.dp).padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 20.dp)
             .clip(RoundedCornerShape(16.dp)),
         backgroundContent = {
             Icon(
@@ -98,7 +91,7 @@ fun cardEmprendimientoUser(
         }
     ) {
         Box(
-            modifier = Modifier.clickable( onClick = onEmprenClick ).fillMaxSize().height(150.dp),
+            modifier = Modifier.clickable( onClick = { onEmprenClick(emprendimiento.id) } ).fillMaxSize().height(150.dp),
             contentAlignment = Alignment.Center
         ) {
             AsyncImage(
@@ -137,7 +130,7 @@ fun cardEmprendimientoUser(
 fun UserEmprendimientos(
     onBackPage: () -> Unit = {},
     onCreateEmprenClick: () -> Unit = {},
-    onEmprenClick: () -> Unit = {},
+    onEmprenClick: (String) -> Unit,
     viewModel: EmprendimientoModel,
     viewModelUser: UserModel
 ) {
@@ -156,7 +149,12 @@ fun UserEmprendimientos(
         }
     }
 
-    val emprendimientos = userState?.id?.let { viewModel.getEmprendimientosByUserId(it) } ?: emptyList()
+    val emprendimientos by viewModel.emprendimiento.collectAsState()
+
+    LaunchedEffect(userState) {
+        userState?.id?.let { viewModel.getEmprendimientosByUserId(it) }
+    }
+
     val SnackBarHostState = remember { SnackbarHostState() }
     var deleteEmpren by remember { mutableStateOf<Emprendimiento?>(null) }
 
@@ -223,7 +221,7 @@ fun UserEmprendimientos(
                 LazyColumn(
                     modifier = Modifier.padding(2.dp)
                 ) {
-                    items(emprendimientos){emprendimiento ->
+                    items(emprendimientos, key = { it.id }){emprendimiento ->
                         var visible by remember { mutableStateOf(true)}
                         AnimatedVisibility(
                             visible = visible,
@@ -242,7 +240,7 @@ fun UserEmprendimientos(
                                 }
                             )
                             cardEmprendimientoUser(
-                                emprendimiento = emprendimiento, onEmprenClick = onEmprenClick, swipeState = dismissState
+                                emprendimiento = emprendimiento, onEmprenClick = { onEmprenClick(emprendimiento.id) } , swipeState = dismissState
                             )
                         }
                     }
