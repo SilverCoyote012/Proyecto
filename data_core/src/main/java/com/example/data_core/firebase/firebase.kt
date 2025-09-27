@@ -2,6 +2,7 @@ package com.example.data_core.firebase
 
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.LifecycleOwner
 import com.example.data_core.database.Emprendimiento
@@ -31,9 +32,25 @@ class FirebaseServiceUser(
     }
 
 
+    suspend fun getUserByUid(uid: String): User? {
+        //Log.d("DEBUG", "getUserByUid1: $uid")
+        val querySnapshot = collection.whereEqualTo("id", uid).get().await()
+        //Log.d("DEBUG", "getUserByUid2: ${querySnapshot.documents}")
 
-    suspend fun updateUser(user: User){
-        collection.document(user.id).set(user.toMap()).await()
+        if (!querySnapshot.isEmpty) {
+            val doc = querySnapshot.documents.first()
+            //Log.d("DEBUG", "getUserByUid3: $doc")
+            val user = User(
+                id = doc.getString("id") ?: "",
+                name = doc.getString("name") ?: "",
+                email = doc.getString("email") ?: "",
+                password = doc.getString("password") ?: "",
+                authType = doc.getString("authType") ?: ""
+            )
+            //Log.d("DEBUG", "getUserByUid4: $user")
+            return user
+        }
+        return null
     }
 
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
@@ -137,17 +154,10 @@ class FirebaseServiceUser(
 
     suspend fun getCurrentUser(): User? {
         val firebaseUser = Firebase.auth.currentUser
-        val providers = firebaseUser?.providerData?.map { it.providerId }
-        val isGoogle = providers?.contains("google.com") == true
-        val isEmailPassword = providers?.contains("password") == true
-
-        return if (isGoogle || isEmailPassword) {
-            val uid = firebaseUser?.uid ?: ""
-            val user = collection.document(uid).get().await().toObject(User::class.java)
-            user
-        } else {
-            null
-        }
+        //Log.d("DEBUG", "${firebaseUser?.uid}")
+        val user = getUserByUid(firebaseUser?.uid ?: "")
+        //Log.d("DEBUG", "$user")
+        return user
     }
 
     suspend fun changePassword(user: User, newPassword: String) {

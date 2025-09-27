@@ -23,6 +23,7 @@ class UserRepository (
     private val userDao: UserDao,
     private val firebaseService: FirebaseServiceUser
 ) {
+
     fun getAllUsers(): Flow<List<User>> = userDao.getAllUsers()
 
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
