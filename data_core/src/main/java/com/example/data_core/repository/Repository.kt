@@ -1,6 +1,10 @@
 package com.example.data_core.repository
 
+import android.Manifest
+import android.content.Context
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
+import androidx.lifecycle.LifecycleOwner
 import com.example.data_core.database.Emprendimiento
 import com.example.data_core.database.EmprendimeintosDao
 import com.example.data_core.database.Historial
@@ -21,41 +25,68 @@ class UserRepository (
 ) {
     fun getAllUsers(): Flow<List<User>> = userDao.getAllUsers()
 
-    suspend fun registerWithEmailAndPassword(user:User): Boolean {
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    suspend fun registerWithEmailAndPasswordWorker(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        user: User,
+        onResult: (Boolean) -> Unit
+    ) {
+        // Guarda el usuario localmente antes de lanzar el Worker
         userDao.insertUser(user)
-        return try {
-            firebaseService.registerWithEmailAndPassword(user)
-            true
-        } catch (_: Exception) {
-            false
-        }
+
+        // El resultado real del registro llega en onResult
+        firebaseService.registerWithEmailAndPassword(
+            context = context,
+            lifecycleOwner = lifecycleOwner,
+            user = user,
+            onResult = onResult
+        )
     }
 
-    suspend fun registerWithGoogleAuthentication(idToken: String): Boolean {
-        return try {
-            firebaseService.registerWithGoogleAuthentication(idToken)
-            true
-        } catch (e: Exception) {
-            false
-        }
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    suspend fun registerWithGoogleAuthenticationWorker(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        idToken: String,
+        onResult: (Boolean) -> Unit
+    ) {
+        firebaseService.registerWithGoogleAuthentication(
+            context = context,
+            lifecycleOwner = lifecycleOwner,
+            idToken = idToken,
+            onResult = onResult
+        )
     }
 
-    suspend fun loginWithEmailAndPassword(user: User): Boolean {
-        return try {
-            val success = firebaseService.loginWithEmailAndPassword(user)
-            success
-        } catch (_: Exception) {
-            false
-        }
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    suspend fun loginWithEmailAndPasswordWorker(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        user: User,
+        onResult: (Boolean) -> Unit
+    ) {
+        firebaseService.loginWithEmailAndPassword(
+            context = context,
+            lifecycleOwner = lifecycleOwner,
+            user = user,
+            onResult = onResult
+        )
     }
 
-    suspend fun loginWithGoogleAuthentication(idToken: String): Boolean {
-        return try {
-            firebaseService.loginWithGoogleAuthentication(idToken)
-            true
-        } catch (e: Exception) {
-            false
-        }
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    suspend fun loginWithGoogleAuthenticationWorker(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        idToken: String,
+        onResult: (Boolean) -> Unit
+    ) {
+        firebaseService.loginWithGoogleAuthentication(
+            context = context,
+            lifecycleOwner = lifecycleOwner,
+            idToken = idToken,
+            onResult = onResult
+        )
     }
 
     suspend fun getCurrentUser(): User? {
@@ -66,8 +97,12 @@ class UserRepository (
         }
     }
 
-    suspend fun updateUser(user: User){
-        userDao.updateUser(user)
+    suspend fun changePassword(user: User, newPassword: String) {
+        try {
+            firebaseService.changePassword(user, newPassword)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
     suspend fun logout() {

@@ -1,14 +1,18 @@
 package com.example.data_core.firebase
 
+import android.Manifest
+import android.content.Context
+import androidx.annotation.RequiresPermission
+import androidx.lifecycle.LifecycleOwner
 import com.example.data_core.database.Emprendimiento
 import com.example.data_core.database.Historial
 import com.example.data_core.database.Producto
 import com.example.data_core.database.User
+import com.example.data_core.workers.ActionManager
+import com.example.data_core.workers.ActionWorker
 import com.google.firebase.Firebase
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 
 class FirebaseServiceUser(
@@ -32,79 +36,101 @@ class FirebaseServiceUser(
         collection.document(user.id).set(user.toMap()).await()
     }
 
-    suspend fun registerWithEmailAndPassword(user: User): Boolean {
-        return try {
-            val authResul = Firebase.auth.createUserWithEmailAndPassword(user.email, user.password).await()
-
-            val uid = authResul.user?.uid ?: ""
-            val user = User(
-                id = uid,
-                name = user.name,
-                email = user.email,
-                password = user.password,
-                authType = "email"
-            )
-
-            collection.document(uid).set(user.toMap()).await()
-            true
-        } catch (_: Exception) {
-            false
-        }
-    }
-
-    suspend fun registerWithGoogleAuthentication(idToken: String): Boolean {
-        return try {
-            val credential = GoogleAuthProvider.getCredential(idToken, null)
-            val authResul = Firebase.auth.signInWithCredential(credential).await()
-
-            val uid = authResul.user?.uid ?: ""
-            val user = User(
-                id = uid,
-                name = authResul.user?.displayName ?: "",
-                email = authResul.user?.email ?: "",
-                password = "",
-                authType = "google"
-            )
-
-            collection.document(uid).set(user.toMap()).await()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    suspend fun loginWithEmailAndPassword(user: User): Boolean {
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    suspend fun registerWithEmailAndPassword(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        user: User,
+        onResult: (Boolean) -> Unit
+    ): Boolean {
         return try {
             Firebase.auth.signOut()
-            Firebase.auth.signInWithEmailAndPassword(user.email, user.password).await()
+
+            val actionManager = ActionManager(context)
+            actionManager.executeAction(
+                lifecycleOwner = lifecycleOwner,
+                actionType = ActionWorker.REGISTER_EMAIL,
+                userEmail = user.email,
+                userPassword = user.password,
+                userName  = user.name,
+                onResult  = onResult
+            )
+            true
+        } catch (e: Exception) {
+            onResult(false)
+            false
+        }
+    }
+
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    suspend fun registerWithGoogleAuthentication(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        idToken: String,
+        onResult: (Boolean) -> Unit
+    ): Boolean {
+        return try {
+
+            Firebase.auth.signOut()
+
+            val actionManager = ActionManager(context)
+            actionManager.executeAction(
+                lifecycleOwner = lifecycleOwner,
+                actionType = ActionWorker.REGISTER_GOOGLE,
+                idToken    = idToken,
+                onResult   = onResult
+            )
+            true
+        } catch (e: Exception) {
+            onResult(false)
+            false
+        }
+    }
+
+
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    suspend fun loginWithEmailAndPassword(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        user: User,
+        onResult: (Boolean) -> Unit
+    ): Boolean {
+        return try {
+            Firebase.auth.signOut()
+            val actionManager = ActionManager(context)
+            actionManager.executeAction(
+                lifecycleOwner = lifecycleOwner,
+                actionType = ActionWorker.LOGIN_EMAIL,
+                userEmail = user.email,
+                userPassword = user.password,
+                onResult = onResult
+            )
             true
         } catch (e: Exception) {
             false
         }
     }
 
-    suspend fun loginWithGoogleAuthentication(idToken: String): Boolean {
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    suspend fun loginWithGoogleAuthentication(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        idToken: String,
+        onResult: (Boolean) -> Unit
+    ): Boolean {
         return try {
-            val credential = GoogleAuthProvider.getCredential(idToken, null)
-            Firebase.auth.signInWithCredential(credential).await()
+            Firebase.auth.signOut()
 
-            val uid = Firebase.auth.currentUser?.uid ?: ""
-            val user = User(
-                id = uid,
-                name = Firebase.auth.currentUser?.displayName ?: "",
-                email = Firebase.auth.currentUser?.email ?: "",
-                password = "",
-                authType = "google"
+            val actionManager = ActionManager(context)
+            actionManager.executeAction(
+                lifecycleOwner = lifecycleOwner,
+                actionType = ActionWorker.LOGIN_GOOGLE,
+                idToken = idToken,
+                onResult = onResult
             )
-
-            val existingUser = collection.document(uid).get().await().toObject(User::class.java)
-            if (existingUser != null) {
-                collection.document(uid).set(user.toMap()).await()
-            } else {
-                collection.document(uid).set(user.toMap()).await()
-            }
             true
         } catch (e: Exception) {
+            onResult(false)
             false
         }
     }
@@ -115,22 +141,29 @@ class FirebaseServiceUser(
         val isGoogle = providers?.contains("google.com") == true
         val isEmailPassword = providers?.contains("password") == true
 
-        return if (firebaseUser != null) {
-            User(
-                id = firebaseUser.uid,
-                name = firebaseUser.displayName ?: "",
-                email = firebaseUser.email ?: "",
-                password = "",
-                authType = when {
-                    isGoogle -> "google"
-                    isEmailPassword -> "email"
-                    else -> "unknown"
-                }
-            )
+        return if (isGoogle || isEmailPassword) {
+            val uid = firebaseUser?.uid ?: ""
+            val user = collection.document(uid).get().await().toObject(User::class.java)
+            user
         } else {
             null
         }
     }
+
+    suspend fun changePassword(user: User, newPassword: String) {
+        val userRef = collection.document(user.id)
+        try {
+            userRef.update("password", newPassword).await()
+
+            val authUser = Firebase.auth.currentUser
+            authUser?.updatePassword(newPassword)?.await()
+
+            user.password = newPassword
+            userRef.set(user.toMap()).await()
+        } catch (e: Exception) {
+            throw e
+    }
+}
 
     suspend fun logout() {
         Firebase.auth.signOut()

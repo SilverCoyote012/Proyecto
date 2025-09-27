@@ -130,7 +130,7 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                 }
                 if (!editName) {
                     Text(
-                        text = name ?: hasError,
+                        text = userState?.name ?: hasError,
                         modifier = Modifier.padding(start = 15.dp, bottom = 10.dp, end = 10.dp),
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.ExtraLight,
@@ -165,12 +165,7 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                             IconButton(
                                 onClick = {
                                     if (!name.isBlank()){
-                                        val updateName = userState!!.copy(name = name)
-                                        viewModel.updateUser(updateName){ succes ->
-                                            editName = false
-                                            userState = updateName
-                                            Toast.makeText(context, "Nombre actualizado", Toast.LENGTH_SHORT).show()
-                                        }
+
                                     }else{
                                         Toast.makeText(context, "Campo vacio", Toast.LENGTH_SHORT).show()
                                     }
@@ -212,8 +207,8 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
             }
 
             Spacer(modifier = Modifier.padding(10.dp))
-            //GoogleUser verifica que el usuario tenga contraseña de forma local
-            val isGoogleUser = userState?.password.isNullOrEmpty()
+            //Se verifica si el usuario sea de Google, para que no pueda editar su contraseña
+            val typeUser = userState?.authType
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors =  CardDefaults.cardColors(
@@ -228,8 +223,11 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
                         fontWeight = FontWeight.Bold, fontSize = 17.sp)
                     IconButton(
-                        //Si no hay contraseña local, se toma como usuario Google, prohibiendo la edicion del campo.
-                        onClick = { if (!isGoogleUser) editPass = !editPass },
+                        onClick = {
+                            if (typeUser == "email") {
+                                editPass = !editPass
+                            }
+                        },
                         modifier = Modifier.size(25.dp))
                     {
                         Icon(
@@ -242,7 +240,7 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                 }
                 if (!editPass) {
                     Text(
-                        text = if (isGoogleUser) "No puede editar su contraseña de Google aquí" else userState?.password?.let { "*".repeat(it.length) } ?: hasError,
+                        text = if (typeUser == "google") "No puede editar su contraseña de Google aquí" else userState?.password?.let { "*".repeat(it.length) } ?: hasError,
                         modifier = Modifier.padding(start = 10.dp, bottom = 10.dp, end = 10.dp),
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontWeight = FontWeight.ExtraLight,
@@ -272,23 +270,27 @@ fun editUser(onBackPage: () -> Unit = {}, viewModel: UserModel){
                                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                                     unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
                                     unfocusedContainerColor = MaterialTheme.colorScheme.onSecondary
-                                ),
-                                enabled = !isGoogleUser
+                                )
                             )
                             IconButton(
                                 onClick = {
-                                    if (!password.isBlank() || password.length < 8 ){
-                                        val updatePass = userState!!.copy(password = password)
-                                        viewModel.updateUser(updatePass){ succes ->
-                                            editPass = false
-                                            userState = updatePass
-                                            Toast.makeText(context, "Contraseña actualizado", Toast.LENGTH_SHORT).show()
+                                    when {
+                                        typeUser == "email" -> editPass = !editPass
+                                        password.isBlank() -> Toast.makeText(context, "Campo vacio", Toast.LENGTH_SHORT).show()
+                                        password.length < 8 -> Toast.makeText(context, "Debe tener al menos 8 caracteres", Toast.LENGTH_SHORT).show()
+
+                                        else -> {
+                                            viewModel.changePassword(userState!!, password) { success ->
+                                                if (success) {
+                                                    Toast.makeText(context, "Contraseña cambiada", Toast.LENGTH_SHORT).show()
+                                                } else {
+                                                    Toast.makeText(context, "Error al cambiar la contraseña", Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
                                         }
-                                    }else{
-                                        Toast.makeText(context, "Campo vacio o falta de  8 caracteres", Toast.LENGTH_SHORT).show()
                                     }
                                 },
-                                enabled = !isGoogleUser,
+                                enabled = typeUser == "google",
                                 modifier = Modifier.size(25.dp)
                             ) {
                                 Icon(

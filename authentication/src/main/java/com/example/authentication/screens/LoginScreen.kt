@@ -1,9 +1,11 @@
 package com.example.authentication.screens
 
-import androidx.compose.foundation.background
+import android.Manifest
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresPermission
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -12,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -25,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 @Composable
 fun LoginScreen(
     viewModel: UserModel,
@@ -46,7 +50,9 @@ fun LoginScreen(
             tint = MaterialTheme.colorScheme.primary
         )
 
-        Text("SpotMe", fontSize = 55.sp,
+        Text(
+            "SpotMe",
+            fontSize = 55.sp,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
         )
@@ -59,22 +65,21 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        LoginFields(
-            viewModel = viewModel,
-            onLoginSuccess = onLoginSuccess
-        )
+        LoginFields(viewModel = viewModel, onLoginSuccess = onLoginSuccess)
     }
 }
 
+@RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 @Composable
 fun LoginFields(
     viewModel: UserModel,
     onLoginSuccess: () -> Unit = {}
-){
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -84,30 +89,27 @@ fun LoginFields(
             val account = task.getResult(ApiException::class.java)
             val idToken = account.idToken
             if (idToken != null) {
-                viewModel.loginWithGoogleAuthentication(idToken) { success ->
-                    if (success) {
-                        onLoginSuccess()
-                    } else {
-                        Toast.makeText(context, "Error al intentar ingresar con Google", Toast.LENGTH_SHORT).show()
-                    }
+                viewModel.loginWithGoogleAuthentication(
+                    context = context,
+                    lifecycleOwner = lifecycleOwner,
+                    idToken = idToken
+                ) { success ->
+                    if (success) onLoginSuccess()
+                    else Toast.makeText(context, "Error al ingresar con Google", Toast.LENGTH_SHORT).show()
                 }
             }
-        } catch (_: Exception) {
-
-        }
+        } catch (_: Exception) { }
     }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.secondary)
+        modifier = Modifier.background(MaterialTheme.colorScheme.secondary)
     ) {
         Text(
             text = "Email",
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
-            modifier = Modifier
-                .width(290.dp),
+            modifier = Modifier.width(290.dp),
             color = MaterialTheme.colorScheme.onSecondaryContainer
         )
 
@@ -115,11 +117,10 @@ fun LoginFields(
             value = email,
             onValueChange = { email = it },
             label = {
-                Text(
-                "Ingrese su correo",
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold)
-                    },
+                Text("Ingrese su correo",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold)
+            },
             modifier = Modifier
                 .width(290.dp)
                 .heightIn(min = 56.dp)
@@ -139,18 +140,18 @@ fun LoginFields(
             text = "Contraseña",
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
-            modifier = Modifier
-                .width(290.dp),
+            modifier = Modifier.width(290.dp),
             color = MaterialTheme.colorScheme.onSecondaryContainer
         )
 
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Ingrese su contraseña",
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Bold)
-                    },
+            label = {
+                Text("Ingrese su contraseña",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold)
+            },
             modifier = Modifier
                 .width(290.dp)
                 .heightIn(min = 56.dp),
@@ -165,60 +166,51 @@ fun LoginFields(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-
-        // Login con Email y Password
+        // --- Login con Email y Password ---
         Button(
             onClick = {
                 when {
-                    email.isBlank() || password.isBlank() -> Toast.makeText(context, "Alguno de los campos estas vacios", Toast.LENGTH_SHORT).show()
-                    !email.isBlank() && !android.util.Patterns.EMAIL_ADDRESS.matcher(email!!).matches() -> Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
+                    email.isBlank() || password.isBlank() ->
+                        Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
+                    !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() ->
+                        Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
                     else -> {
-                        try {
-                            viewModel.loginWithEmailAndPassword(User(
-                                "",
-                                "",
-                                email,
-                                password,
+                        viewModel.loginWithEmailAndPassword(
+                            context = context,
+                            lifecycleOwner = lifecycleOwner,
+                            user = User(
+                                id = "",
+                                name = "",
+                                email = email,
+                                password = password,
                                 authType = "email"
-                            )) { success ->
-                                if (success) {
-                                    onLoginSuccess()
-                                } else {
-                                    Toast.makeText(context, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        } catch (e: Exception) {
-
+                            )
+                        ) { success ->
+                            if (success) onLoginSuccess()
+                            else Toast.makeText(context, "Error al iniciar sesión", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             },
-            modifier = Modifier
-                .width(216.dp)
-                .height(39.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            )
+            modifier = Modifier.width(216.dp).height(39.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
-            Text(text = "Iniciar sesión", color = Color.White, fontWeight = FontWeight.ExtraBold)
+            Text("Iniciar sesión", color = Color.White, fontWeight = FontWeight.ExtraBold)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Login con Google
+        // --- Login con Google ---
         Button(
             onClick = {
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(context.getString(R.string.default_web_client_id))
                     .requestEmail()
                     .build()
-
                 val googleSignInClient = GoogleSignIn.getClient(context, gso)
                 launcher.launch(googleSignInClient.signInIntent)
             },
-            modifier = Modifier
-                .width(216.dp)
-                .height(39.dp),
+            modifier = Modifier.width(216.dp).height(39.dp),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text("Iniciar Sesión con Google", color = Color.White, fontWeight = FontWeight.ExtraBold)

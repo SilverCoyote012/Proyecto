@@ -1,5 +1,9 @@
 package com.example.data_core.model
 
+import android.Manifest
+import android.content.Context
+import androidx.annotation.RequiresPermission
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,48 +33,88 @@ class UserModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
-    fun registerWithEmailAndPassword(user: User, onResult: (Boolean) -> Unit) {
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    fun registerWithEmailAndPassword(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        user: User,
+        onResult: (Boolean) -> Unit
+    ) {
         viewModelScope.launch {
-            val success = repository.registerWithEmailAndPassword(user)
-            onResult(success)
+            repository.registerWithEmailAndPasswordWorker(
+                context = context,
+                lifecycleOwner = lifecycleOwner,
+                user = user,
+                onResult = onResult
+            )
         }
     }
 
-    fun registerWithGoogleAuthentication(idToken: String, onResult: (Boolean) -> Unit) {
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    fun registerWithGoogleAuthentication(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        idToken: String,
+        onResult: (Boolean) -> Unit
+    ) {
         viewModelScope.launch {
-            val success = repository.registerWithGoogleAuthentication(idToken)
-            onResult(success)
+            repository.registerWithGoogleAuthenticationWorker(
+                context = context,
+                lifecycleOwner = lifecycleOwner,
+                idToken = idToken,
+                onResult = onResult
+            )
         }
     }
 
-    fun loginWithEmailAndPassword(user: User, onResult: (Boolean) -> Unit) {
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    fun loginWithEmailAndPassword(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        user: User,
+        onResult: (Boolean) -> Unit
+    ) {
         viewModelScope.launch {
-            val success = repository.loginWithEmailAndPassword(user)
-            onResult(success)
+            repository.loginWithEmailAndPasswordWorker(
+                context = context,
+                lifecycleOwner = lifecycleOwner,
+                user = user,
+                onResult = onResult
+            )
         }
     }
 
-    fun loginWithGoogleAuthentication(idToken: String, onResult: (Boolean) -> Unit) {
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    fun loginWithGoogleAuthentication(
+        context: Context,
+        lifecycleOwner: LifecycleOwner,
+        idToken: String,
+        onResult: (Boolean) -> Unit
+    ) {
         viewModelScope.launch {
-            val success = repository.loginWithGoogleAuthentication(idToken)
-            onResult(success)
+            repository.loginWithGoogleAuthenticationWorker(
+                context = context,
+                lifecycleOwner = lifecycleOwner,
+                idToken = idToken,
+                onResult = onResult
+            )
         }
     }
 
-    suspend fun getCurrentUser(): User? {
-        return repository.getCurrentUser()
-    }
-
-    fun updateUser(user: User, onResult: (Boolean) -> Unit){
+    fun changePassword(user: User, newPassword: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            val currentUser = getCurrentUser()
-            if (currentUser != null) {
-                repository.updateUser(user)
+            try {
+                repository.changePassword(user, newPassword)
                 onResult(true)
-            } else {
+            } catch (e: Exception) {
                 onResult(false)
             }
         }
+    }
+
+
+    suspend fun getCurrentUser(): User? {
+        return repository.getCurrentUser()
     }
 
     fun logout() {

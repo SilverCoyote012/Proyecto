@@ -70,6 +70,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
     implementation(project(":authentication"))
     implementation(project(":emprendimientos"))
     implementation(project(":configuration"))
