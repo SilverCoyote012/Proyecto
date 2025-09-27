@@ -359,8 +359,7 @@ fun createEmprendimiento(
             }
 
             Column(
-                modifier = Modifier.padding(innerPadding)
-                    .fillMaxSize().fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -399,7 +398,7 @@ fun createEmprendimiento(
                             }
                         }
                     },
-                    modifier = Modifier.width(277.dp).padding(10.dp),
+                    modifier = Modifier.padding(10.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(5.dp)
                 ) {

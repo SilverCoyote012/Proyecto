@@ -43,7 +43,7 @@ import com.example.ui_theme.ui.theme.ProyectoTheme
 @Composable
 fun cardModo(selectModo: Boolean, onSelectModo: (Boolean) -> Unit = {} ){
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(10.dp),
         colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onSurfaceVariant),
         shape = RoundedCornerShape(5.dp)
     ) {
@@ -58,7 +58,7 @@ fun cardModo(selectModo: Boolean, onSelectModo: (Boolean) -> Unit = {} ){
             Column(Modifier.weight(3f), horizontalAlignment = Alignment.CenterHorizontally) {
                 Card(
                     modifier = Modifier
-                        .width(160.dp)
+                        .fillMaxWidth()
                         .size(85.dp),
                     colors =  CardDefaults.cardColors(Color.White),
                     shape = RoundedCornerShape(5.dp)
@@ -88,8 +88,7 @@ fun cardModo(selectModo: Boolean, onSelectModo: (Boolean) -> Unit = {} ){
 
             Column(Modifier.weight(3f), horizontalAlignment = Alignment.CenterHorizontally) {
                 Card(
-                    modifier = Modifier
-                        .width(160.dp)
+                    modifier = Modifier.fillMaxWidth()
                         .size(85.dp),
                     colors =  CardDefaults.cardColors(Color.Black),
                     shape = RoundedCornerShape(5.dp)

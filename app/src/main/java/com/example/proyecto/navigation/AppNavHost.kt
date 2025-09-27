@@ -1,10 +1,13 @@
 package com.example.proyecto.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 
 import com.example.authentication.screens.*
 import com.example.data_core.model.*
@@ -21,7 +24,7 @@ fun AppNavHost(
     onSelectModo: (Boolean) -> Unit,
     viewModelUser: UserModel,
     viewModelEmprendimiento: EmprendimientoModel,
-    vievModelProducto: ProductoModel,
+    viewModelProducto: ProductoModel,
     viewModelHistorial: HistorialModel,
     navController: NavHostController = rememberNavController(),
 ) {
@@ -74,20 +77,51 @@ fun AppNavHost(
 
         composable("UsuarioEmprendimientos") {
             UserEmprendimientos(
-                onBackPage = { navController.popBackStack()},
-                onCreateEmprenClick = { navController.navigate("CrearEmprendimiento")},
-                onEmprenClick = { navController.navigate("EmprendimientoProductos")},
+                onBackPage = { navController.popBackStack() },
+                onCreateEmprenClick = { navController.navigate("CrearEmprendimiento") },
+                onEmprenClick = { idEmprendimiento ->
+                    navController.navigate("EmprendimientoProductos/$idEmprendimiento")
+                },
+                viewModel = viewModelEmprendimiento,
+                viewModelUser = viewModelUser
+            )
+        }
+        composable("CrearEmprendimiento") {
+            createEmprendimiento(
+                onBackPage = { navController.popBackStack() },
                 viewModel = viewModelEmprendimiento, viewModelUser = viewModelUser
             )
         }
-        composable("CrearEmprendimiento") { createEmprendimiento( onBackPage = { navController.popBackStack() }, viewModel = viewModelEmprendimiento, viewModelUser = viewModelUser ) }
-        composable("EmprendimientoProductos") {
+
+        composable("EmprendimientoProductos/{idEmprendimiento}",
+            arguments = listOf(navArgument("idEmprendimiento") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val idEmprendimiento = backStackEntry.arguments?.getString("idEmprendimiento") ?: ""
             ProductosEmprendimiento(
-                onEditClick = { navController.navigate("EditProducto")},
-                onCreateClick = { navController.navigate("CreateProducto")}
+                idEmpren = idEmprendimiento,
+                viewModel = viewModelProducto,
+                viewModelEmpren = viewModelEmprendimiento,
+                onBackPage = { navController.popBackStack() },
+                onCreateEditClick = { producto ->
+                    viewModelProducto.productEdit.value = producto
+                    navController.navigate("CrearEditarProducto/$idEmprendimiento")
+                }
             )
         }
-        composable("EditProducto") { EditarProducto() }
-        composable("CreateProducto") { CrearProducto() }
+        composable(
+            "CrearEditarProducto/{idEmprendimiento}",
+            arguments = listOf(navArgument("idEmprendimiento") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val idEmprendimiento = backStackEntry.arguments?.getString("idEmprendimiento") ?: ""
+            val existingProduct = viewModelProducto.productEdit.collectAsState().value
+
+            CreateEditProducto(
+                viewModel = viewModelProducto,
+                viewModelEmpren = viewModelEmprendimiento,
+                existingProduct = existingProduct, // puede ser null
+                idEmpren = idEmprendimiento,
+                onBackPage = { navController.popBackStack() }
+            )
+        }
     }
 }
