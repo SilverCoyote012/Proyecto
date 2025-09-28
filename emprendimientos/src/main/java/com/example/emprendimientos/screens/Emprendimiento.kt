@@ -173,7 +173,8 @@ fun EmprendimientoScreen(
 
     LazyColumn(
         modifier = Modifier
-            .padding().fillMaxSize(),
+            .padding().fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
     ) {
         item {
             cardEmprendimiento(emprendimiento, onNavigateBack)
