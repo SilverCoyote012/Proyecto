@@ -37,12 +37,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        //Creacion de la base de datos
         val database = Room.databaseBuilder(
             applicationContext,
             DataBase::class.java,
             "database"
         ).fallbackToDestructiveMigration().build()
 
+        // En la siguiente seccion de codigo, se crean los repositorios y los viewModels de cada entidad de la base de datos
         val UserRepository = UserRepository(database.userDao(), FirebaseServiceUser())
         val viewModelFactoryUser = UserModelFactory(UserRepository)
         val viewModelUser = ViewModelProvider(this, viewModelFactoryUser)[UserModel::class.java]
@@ -69,10 +72,13 @@ class MainActivity : ComponentActivity() {
             var selectOpcion by remember { mutableStateOf(true)  } //Incia en muestra de iconos en categorias
             ProyectoTheme(darkTheme = selectModo) {
                 AppNavHost(
+                    // Manejo de modo claro y oscuro
                     selectModo = selectModo,
                     onSelectModo = { nuevoModo -> selectModo = nuevoModo },
+                    // Manejo de mostreo de categorias en iconos o textos
                     selectOpcion = selectOpcion,
                     onSelectOpcion = { select -> selectOpcion = select },
+                    // Los models que se crearon, son pasados a la funcion AppNavHost, esto para poder manejarlo en diferentes lugares del proyecto
                     viewModelUser = viewModelUser,
                     viewModelEmprendimiento = viewModelEmprendimiento,
                     viewModelProducto = viewModelProducto,

@@ -29,6 +29,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 
+
+// Ventana de login, posibilidad de iniciar sesion con correo y con google
+
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 @Composable
 fun LoginScreen(
@@ -96,12 +99,13 @@ fun LoginFields(
             val account = task.getResult(ApiException::class.java)
             val idToken = account.idToken
             if (idToken != null) {
+                // Se llama al Model para iniciar sesion con google
                 viewModel.loginWithGoogleAuthentication(
                     context = context,
                     lifecycleOwner = lifecycleOwner,
                     idToken = idToken
                 ) { success ->
-                    if (success) onLoginSuccess()
+                    if (success) onLoginSuccess() // En caso de que se haya iniciado sesion correctamente se llama a la funcion onLoginSuccess (La cual envia a la pagina principal)
                 }
             }
         } catch (_: Exception) { }
@@ -175,9 +179,11 @@ fun LoginFields(
         Button(
             onClick = {
                 when {
+                    // Validaciones de los campos
                     email.isBlank() || password.isBlank() -> Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
                     !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
                     else -> {
+                        // Se llama al Model para iniciar sesion con correo
                         viewModel.loginWithEmailAndPassword(
                             context = context,
                             lifecycleOwner = lifecycleOwner,
@@ -202,8 +208,10 @@ fun LoginFields(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Boton para iniciar sesion con google
         Button(
             onClick = {
+                // Se crea un intent para iniciar sesion con google
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(context.getString(R.string.default_web_client_id))
                     .requestEmail()

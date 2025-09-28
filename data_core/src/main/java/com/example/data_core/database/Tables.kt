@@ -5,6 +5,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
 
+
+// Entidades de la base de datos con sus atributos y funciones para convertirlos a mapas y viceversa, permitiendo el uso de Room y Firebase
+
+
 @Entity
 data class User(
     @PrimaryKey val id: String,

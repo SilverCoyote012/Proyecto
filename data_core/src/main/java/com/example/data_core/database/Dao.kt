@@ -8,6 +8,10 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+
+// Funciones para acceder a la base de datos utiliando Dao
+
+
 @Dao
 interface UserDao {
     @Query("SELECT * FROM User ORDER BY id ASC")

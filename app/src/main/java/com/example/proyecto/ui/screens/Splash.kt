@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.authentication.R
 import com.example.ui_theme.ui.theme.ProyectoTheme
 
+
 @Composable
 fun HomeTest(viewModel: UserModel, onLogoutClick: () -> Unit = {}) {
     // null = cargando, User? = cargado, false = error/ningún usuario
@@ -68,6 +69,7 @@ fun HomeTest(viewModel: UserModel, onLogoutClick: () -> Unit = {}) {
 }
 
 
+// Pantalla de splash de la aplicacion, se muestra durante 1.5 segundos antes de pasar a la pantalla de login
 @Composable
 fun SplashScreen(navController: NavController){
     LaunchedEffect(key1 = true) {
@@ -78,6 +80,7 @@ fun SplashScreen(navController: NavController){
     InicioLogo()
 }
 
+// Creacion del logo de la aplicacion que se muestra en la pantalla de splash
 @Composable
 fun InicioLogo(){
     Column(

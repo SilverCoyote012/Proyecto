@@ -16,6 +16,11 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
+
+// Clases para interactuar con la base de datos de Firebase
+
+
+
 class FirebaseServiceUser(
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 ){
@@ -32,6 +37,7 @@ class FirebaseServiceUser(
     }
 
 
+    // Esta funcion es usada para obtener un usuario por su id de usuario en Firebase, despues nos devuleve un objeto User con los datos obtenidos
     suspend fun getUserByUid(uid: String): User? {
         //Log.d("DEBUG", "getUserByUid1: $uid")
         val querySnapshot = collection.whereEqualTo("id", uid).get().await()
@@ -53,7 +59,8 @@ class FirebaseServiceUser(
         return null
     }
 
-    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE) //Las funciones con esta linea son para hacer la verificacion de que el usuario cuenta con acceso a interner para realizar la accion
+    // Funcion que permite a un usuario registrarse con email y contraseña, se utiliza Firebase Authentication
     suspend fun registerWithEmailAndPassword(
         context: Context,
         lifecycleOwner: LifecycleOwner,
@@ -61,6 +68,7 @@ class FirebaseServiceUser(
         onResult: (Boolean) -> Unit
     ): Boolean {
         return try {
+            // Se utiliza la clase ActionManager para ejecutar la accion de registro con email y contraseña, en la cual se puede hacer la validacion de que el usuario cuenta con acceso a internet
             val actionManager = ActionManager(context)
             actionManager.executeAction(
                 lifecycleOwner = lifecycleOwner,
@@ -77,7 +85,8 @@ class FirebaseServiceUser(
         }
     }
 
-    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE) //Las funciones con esta linea son para hacer la verificacion de que el usuario cuenta con acceso a interner para realizar la accion
+    // Funcion que permite a un usuario registrarse con Google, se utiliza Firebase Authentication
     suspend fun registerWithGoogleAuthentication(
         context: Context,
         lifecycleOwner: LifecycleOwner,
@@ -85,6 +94,7 @@ class FirebaseServiceUser(
         onResult: (Boolean) -> Unit
     ): Boolean {
         return try {
+            // Se utiliza la clase ActionManager para ejecutar la accion de registro con Google, en la cual se puede hacer la validacion de que el usuario cuenta con acceso a internet
             val actionManager = ActionManager(context)
             actionManager.executeAction(
                 lifecycleOwner = lifecycleOwner,
@@ -100,7 +110,8 @@ class FirebaseServiceUser(
     }
 
 
-    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE) //Las funciones con esta linea son para hacer la verificacion de que el usuario cuenta con acceso a interner para realizar la accion
+    // Funcion que permite a un usuario iniciar sesion con email y contraseña, se utiliza Firebase Authentication
     suspend fun loginWithEmailAndPassword(
         context: Context,
         lifecycleOwner: LifecycleOwner,
@@ -108,6 +119,7 @@ class FirebaseServiceUser(
         onResult: (Boolean) -> Unit
     ): Boolean {
         return try {
+            // Se utiliza la clase ActionManager para ejecutar la accion de inicio de sesion con email y contraseña, en la cual se puede hacer la validacion de que el usuario cuenta con acceso a internet
             val actionManager = ActionManager(context)
             actionManager.executeAction(
                 lifecycleOwner = lifecycleOwner,
@@ -122,7 +134,8 @@ class FirebaseServiceUser(
         }
     }
 
-    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE) //Las funciones con esta linea son para hacer la verificacion de que el usuario cuenta con acceso a interner para realizar la accion
+    // Funcion que permite a un usuario registrarse con Google, se utiliza Firebase Authentication
     suspend fun loginWithGoogleAuthentication(
         context: Context,
         lifecycleOwner: LifecycleOwner,
@@ -130,6 +143,7 @@ class FirebaseServiceUser(
         onResult: (Boolean) -> Unit
     ): Boolean {
         return try {
+            // Se utiliza la clase ActionManager para ejecutar la accion de inicio de sesion con Google, en la cual se puede hacer la validacion de que el usuario cuenta con acceso a internet
             val actionManager = ActionManager(context)
             actionManager.executeAction(
                 lifecycleOwner = lifecycleOwner,
@@ -152,12 +166,14 @@ class FirebaseServiceUser(
         return user
     }
 
+    // Se utiliza la funcion para cambiar el nombre del usuario en la base de datos de Firebase
     suspend fun changeName(user: User, newName: String) {
         Log.d("DEBUG", "Changing name for user: $user")
         val currentUser = Firebase.auth.currentUser
         Log.d("DEBUG", "User: ${currentUser?.displayName}")
         if (currentUser != null) {
             Log.d("DEBUG", "Changing name for user: $user")
+            // Se cambia el nombre del usuario en la base de datos de Firebase (No en la funcion de Authentication de Firebase)
             collection.document(currentUser.uid).update("name", newName).await()
             Log.d("DEBUG", "Name changed successfully")
         }
@@ -165,9 +181,10 @@ class FirebaseServiceUser(
 
     }
 
+    // Se utiliza la funcion para cambiar la contraseña del usuario en la base de datos de Firebase
     suspend fun changePassword(user: User, newPassword: String) {
         Log.d("DEBUG", "Changing password for user: $user")
-        val currentUser = Firebase.auth.currentUser
+        val currentUser = Firebase.auth.currentUser // Se obtiene el usuario actual
         Log.d("DEBUG", "User: ${currentUser?.displayName}")
         if (currentUser != null) {
             currentUser.updatePassword(newPassword)
@@ -182,11 +199,13 @@ class FirebaseServiceUser(
                 authType = "email"
             )
 
+            // Se actualiza el usuario en la base de datos de Firebase
             collection.document(currentUser.uid).set(updatedUser.toMap()).await()
             Log.d("DEBUG", "Password changed successfully")
         }
     }
 
+    // Funcion para cerrar sesion de Firebase
     suspend fun logout() {
         Firebase.auth.signOut()
     }

@@ -29,6 +29,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 
+
+// Ventana de registro, posibilidad de registrarse con correo y con google
+
+
 @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
 @Composable
 fun RegisterScreen(
@@ -88,7 +92,7 @@ fun RegisterFields(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // --- Google launcher
+    // Se usa para iniciar sesion con google
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -97,6 +101,7 @@ fun RegisterFields(
             val account = task.getResult(ApiException::class.java)
             val idToken = account.idToken
             if (idToken != null) {
+                // Se llama al Model para iniciar sesion con google
                 viewModel.registerWithGoogleAuthentication(
                     context = context,
                     lifecycleOwner = lifecycleOwner,
@@ -104,7 +109,7 @@ fun RegisterFields(
                 ) { success ->
                     if (success) {
                         Toast.makeText(context, "Registro con Google exitoso", Toast.LENGTH_SHORT).show()
-                        onLoginClick()
+                        onLoginClick() // En caso de que se haya iniciado sesion correctamente se llama a la funcion onLoginClick (La cual envia a la ventana de login)
                     } else {
 
                     }
@@ -114,7 +119,6 @@ fun RegisterFields(
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        // --- Nombre
         Text(
             text = "Nombre",
             fontWeight = FontWeight.Bold,
@@ -141,7 +145,6 @@ fun RegisterFields(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // --- Email
         Text(
             text = "Email",
             fontWeight = FontWeight.ExtraBold,
@@ -168,7 +171,6 @@ fun RegisterFields(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // --- Contraseña
         Text(
             text = "Contraseña",
             fontWeight = FontWeight.ExtraBold,
@@ -195,17 +197,15 @@ fun RegisterFields(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // --- Registro con correo
         Button(
             onClick = {
                 when {
-                    email.isBlank() || name.isBlank() || password.isBlank() ->
-                        Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
-                    !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() ->
-                        Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
-                    password.length < 8 ->
-                        Toast.makeText(context, "La contraseña debe tener al menos 8 caracteres", Toast.LENGTH_SHORT).show()
+                    // Validaciones de los campos
+                    email.isBlank() || name.isBlank() || password.isBlank() -> Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
+                    !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> Toast.makeText(context, "Error en el formato de Email", Toast.LENGTH_SHORT).show()
+                    password.length < 8 -> Toast.makeText(context, "La contraseña debe tener al menos 8 caracteres", Toast.LENGTH_SHORT).show()
                     else -> {
+                        // Se llama al Model para registrarse con correo
                         viewModel.registerWithEmailAndPassword(
                             context = context,
                             lifecycleOwner = lifecycleOwner,
@@ -219,7 +219,7 @@ fun RegisterFields(
                         ) { success ->
                             if (success) {
                                 Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
-                                onLoginClick()
+                                onLoginClick() // En caso de que se haya registrado correctamente se llama a la funcion onLoginClick (La cual envia a la ventana de login)
                             } else {
                                 Toast.makeText(context, "Error al registrar", Toast.LENGTH_SHORT).show()
                             }
@@ -235,9 +235,10 @@ fun RegisterFields(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // --- Registro con Google
+        // Boton para iniciar sesion con google
         Button(
             onClick = {
+                // Se crea un intent para iniciar sesion con google
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestIdToken(context.getString(R.string.default_web_client_id))
                     .requestEmail()

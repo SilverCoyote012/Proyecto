@@ -23,10 +23,13 @@ import com.example.emprendimientos.screens.EmprendimientosScreen
 
 @Composable
 fun AppNavHost(
+    // Modo oscuro y claro
     selectModo: Boolean,
     onSelectModo: (Boolean) -> Unit,
+    // Mostrar iconos o texto
     selectOpcion: Boolean,
     onSelectOpcion: (Boolean) -> Unit,
+    // Aqui se reciben los models de la base de datos creados en el MainActivty
     viewModelUser: UserModel,
     viewModelEmprendimiento: EmprendimientoModel,
     viewModelProducto: ProductoModel,
@@ -35,7 +38,7 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "SplashScreen"
+        startDestination = "SplashScreen" // Se inicia en la aplicacion en la pantalla de splash
     ) {
         composable("SplashScreen") { SplashScreen(navController) }
         composable("homeTest") { HomeTest(
@@ -54,9 +57,10 @@ fun AppNavHost(
             onRegisterClick = {  }
         ) }
 
-//        // Emprendimientos
+        // Emprendimientos
         composable("home") {
             EmprendimientosScreen(
+                // Para manejar la pantalla donde se muestra un emprendimiento a detalle, se pasa el id del emprendimiento a la pantalla donde se mostrara
                 onSelectEmprendimiento = { idEmprendimiento ->
                     navController.navigate("emprendimiento_detalle/$idEmprendimiento")
                 },
@@ -70,6 +74,7 @@ fun AppNavHost(
             CatalogoScreen(
                 viewModel = viewModelEmprendimiento,
                 onLogoClick = { navController.navigate("home") },
+                // Para manejar la pantalla donde se muestra un emprendimiento a detalle, se pasa el id del emprendimiento a la pantalla donde se mostrara
                 onSelectEmprendimiento = { idEmprendimiento ->
                     navController.navigate("emprendimiento_detalle/$idEmprendimiento")
                 },
@@ -115,6 +120,7 @@ fun AppNavHost(
             UserEmprendimientos(
                 onBackPage = { navController.popBackStack() },
                 onCreateEmprenClick = { navController.navigate("CrearEmprendimiento") },
+                // Para manejar la pantalla donde se muestra un emprendimiento a detalle, se pasa el id del emprendimiento a la pantalla donde se mostrara
                 onEmprenClick = { idEmprendimiento ->
                     navController.navigate("EmprendimientoProductos/$idEmprendimiento")
                 },
@@ -140,6 +146,7 @@ fun AppNavHost(
                 viewModelEmpren = viewModelEmprendimiento,
                 viewModelAccion = viewModelHistorial,
                 onBackPage = { navController.popBackStack() },
+                // Para manejar la pantalla donde se muestra un producto a detalle, se pasa el id del producto a la pantalla donde se mostrara
                 onCreateEditClick = { producto ->
                     viewModelProducto.productEdit.value = producto
                     navController.navigate("CrearEditarProducto/$idEmprendimiento")

@@ -17,6 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
+
+// Componente separa para poder usarce en diferentes ventanas (login y registro)
+
+
 @Composable
 fun AuthenticationNavMenu(
     selectMenu: String,
