@@ -23,11 +23,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.data_core.database.Emprendimiento
 import com.example.data_core.database.Producto
@@ -36,12 +38,12 @@ import com.example.data_core.model.ProductoModel
 
 @Composable
 fun cardEmprendimiento(
-    emprendimiento: Emprendimiento?
+    emprendimiento: Emprendimiento?,
+    onNavigateBack: () -> Unit
 ) {
     Box(
         modifier = Modifier
-            .height(200.dp)
-            .fillMaxWidth(),
+            .height(200.dp).fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
@@ -50,6 +52,16 @@ fun cardEmprendimiento(
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
+        IconButton(
+            onClick = onNavigateBack,
+            modifier = Modifier.align(Alignment.TopStart).padding(top = 15.dp, start = 10.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Regresar",
+                tint = Color.White
+            )
+        }
         Card(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -57,21 +69,19 @@ fun cardEmprendimiento(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.onBackground
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
             shape = RectangleShape
         ) {
             Text(
                 text = emprendimiento?.nombreEmprendimiento ?: "Nombre del emprendimiento",
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center, fontSize = 18.sp,
+                modifier = Modifier.fillMaxWidth().height(35.dp),
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold,
                     shadow = Shadow(
-                        color = Color.White.copy(alpha = 0.8f),
-                        offset = Offset(1f, 1f),
+                        color = Color.White.copy(alpha = 0.2f),
+                        offset = Offset(4f, 0f),
                         blurRadius = 2f
                     )
                 ),
@@ -86,28 +96,22 @@ fun cardEmprendimiento(
 fun ProductoItem(producto: Producto) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.onBackground
-        ),
+            .fillMaxWidth().fillMaxSize().padding(start = 10.dp, end = 10.dp, top = 10.dp).height(90.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onBackground),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(7.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             AsyncImage(
                 model = producto.imagen,
                 contentDescription = producto.nombreProducto,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color.White)
+                modifier = Modifier.height(80.dp).size(100.dp).clip(RoundedCornerShape(5.dp))
             )
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -117,32 +121,27 @@ fun ProductoItem(producto: Producto) {
             ) {
                 Text(
                     text = producto.nombreProducto,
-                    style = MaterialTheme.typography.titleSmall.copy(
-                        fontStyle = FontStyle.Italic,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary,
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    modifier = Modifier.fillMaxWidth(),
+                    fontSize = 14.sp, color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold,
+                    maxLines = 1
                 )
 
                 Text(
                     text = producto.descripcion,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(top = 2.dp)
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp), style = TextStyle(lineHeight = 15.sp),
+                    fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    maxLines = 2
                 )
 
                 Text(
                     text = "$${producto.precio}",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    ),
-                    modifier = Modifier.padding(top = 4.dp)
+                    modifier = Modifier.weight(1f),
+                    fontSize = 12.sp,
+                    fontStyle = FontStyle.Italic,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    maxLines = 1
                 )
             }
         }
@@ -172,125 +171,101 @@ fun EmprendimientoScreen(
     //Log.d("DEBUG", "Emprendimiento found: $emprendimiento")
     //Log.d("DEBUG", "Productos filtrados: ${productosFiltrados.size}")
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text("")
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Regresar",
-                            tint = MaterialTheme.colorScheme.onTertiaryContainer
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
-                ),
-            )
+    LazyColumn(
+        modifier = Modifier
+            .padding().fillMaxSize(),
+    ) {
+        item {
+            cardEmprendimiento(emprendimiento, onNavigateBack)
         }
-    ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-        ) {
-            item {
-                cardEmprendimiento(emprendimiento)
-            }
 
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    //modifier = Modifier.size(30.dp).width(30.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
                 ) {
-                    Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFFEAD6CA),
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                        IconButton(
+                            onClick = {  },
+                            modifier = Modifier.size(30.dp)
                         ) {
-                            IconButton(
-                                onClick = {  },
-                                modifier = Modifier
-                                    .size(30.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Phone,
-                                    contentDescription = "Teléfono",
-                                    tint = Color(0xFF7B3F00)
-                                )
-                            }
-                            Text(
-                                text = emprendimiento?.telefono ?: "No disponible",
-                                color = Color(0xFF7B3F00),
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontWeight = FontWeight.Medium
-                                ),
-                                maxLines = 1
+                            Icon(
+                                imageVector = Icons.Default.Phone,
+                                contentDescription = "Teléfono",
+                                tint = Color.Black, modifier = Modifier.size(15.dp).padding(0.dp)
                             )
                         }
-                    }
-
-                    Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFFEAD6CA),
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    ) {
                         Text(
-                            text = emprendimiento?.categoria ?: "Medio Ambiente",
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                            color = Color(0xFF7B3F00),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Medium
-                            )
-                        )
-                    }
-
-                    Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFFEAD6CA),
-                    ) {
-                        Text(
-                            text = emprendimiento?.nombreEmprendimiento?.take(10) ?: "Nombre Apt",
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                            color = Color(0xFF7B3F00),
-                            style = MaterialTheme.typography.bodyMedium.copy(
-                                fontWeight = FontWeight.Medium
+                            text = emprendimiento?.telefono ?: "No disponible",
+                            color = Color.Black,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Light, fontSize = 12.sp, fontStyle = FontStyle.Italic
                             ),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            maxLines = 1
                         )
                     }
                 }
-            }
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    Text(
+                        text = emprendimiento?.categoria ?: "Categoria",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        color = Color.Black,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Light, fontSize = 12.sp, fontStyle = FontStyle.Italic
+                        )
+                    )
+                }
 
-            item {
-                Text(
-                    text = "Productos",
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                ) {
+                    Text(
+                        text = emprendimiento?.nombreEmprendimiento?.take(10) ?: "Nombre Apt",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        color = Color.Black,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Light, fontSize = 12.sp, fontStyle = FontStyle.Italic
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
+        }
 
-            items(productosFiltrados) { producto ->
-                ProductoItem(producto)
-            }
+        item {
+            Text(
+                text = "Productos",
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    fontWeight = FontWeight.ExtraBold
+                ), fontSize = 17.sp,
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
 
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+        items(productosFiltrados) { producto ->
+            ProductoItem(producto)
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

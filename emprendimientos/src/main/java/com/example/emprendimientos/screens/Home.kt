@@ -64,7 +64,7 @@ fun topMenu(
                     painterResource(R.drawable.logo),
                     contentDescription = "Logo",
                     modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             }
         },
@@ -73,8 +73,8 @@ fun topMenu(
                 Icon(
                     painterResource(R.drawable.mercado_catalogo),
                     contentDescription = "Emprendimientos",
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    modifier = Modifier.size(30.dp),
+                    tint = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             }
 
@@ -82,8 +82,8 @@ fun topMenu(
                 Icon(
                     painterResource(R.drawable.perfil),
                     contentDescription = "Perfil",
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    modifier = Modifier.size(30.dp),
+                    tint = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             }
         },
@@ -109,21 +109,20 @@ fun EmprendimientoItem(
         shape = RoundedCornerShape(5.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary
+            containerColor = MaterialTheme.colorScheme.onBackground
         )
     ) {
         Box(
             modifier = Modifier
-                .height(180.dp)
-                .fillMaxWidth()
+                .clip(RoundedCornerShape(topEnd =  16.dp, topStart =  16.dp)).fillMaxWidth()
         ) {
             AsyncImage(
                 model = emprendimiento.imagen,
                 contentDescription = "Imagen del emprendimiento",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp))
+                    .fillMaxSize().height(120.dp).fillMaxSize()
+                    .clip(RoundedCornerShape(topEnd = 16.dp, topStart =  16.dp))
             )
             Text(
                 text = emprendimiento.nombreEmprendimiento,
@@ -202,7 +201,6 @@ fun EmprendimientosScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(vertical = 8.dp, horizontal = 16.dp)
-                .background(Color.White)
         ) {
             item {
                 Text(
