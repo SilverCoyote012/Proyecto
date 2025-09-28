@@ -237,6 +237,26 @@ class ProductoModel(private val repository: ProductoRepository) : ViewModel() {
     fun getProductoByEmprendimientoId(emprendimientoId: String): List<Producto> {
         return producto.value.filter { it.idEmprendimiento == emprendimientoId }
     }
+
+    private val _productosFirebase = MutableStateFlow<List<Producto>>(emptyList())
+    val productosFirebase: StateFlow<List<Producto>> = _productosFirebase.asStateFlow()
+
+    fun getProductosFromFirebase() {
+        viewModelScope.launch {
+            val data = repository.getAllProductos()
+            Log.d("DEBUG", "Firebase data: $data")
+            data.collectLatest { productos ->
+                _productosFirebase.value = productos
+            }
+        }
+    }
+
+    fun getProductosByEmprendimiento(idEmprendimiento: String) {
+        viewModelScope.launch {
+            val data = repository.getProductosByEmprendimiento(idEmprendimiento)
+            _productosFirebase.value = data
+        }
+    }
 }
 
 class HistorialModel(private val repository: HistorialRepository) : ViewModel() {

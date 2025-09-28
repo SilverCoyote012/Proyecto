@@ -289,6 +289,32 @@ class FirebaseServiceProducto(
     suspend fun deleteProducto(id: String){
         collection.document(id).delete().await()
     }
+
+    suspend fun getProductosByEmprendimiento(idEmprendimiento: String): List<Producto> {
+        return try {
+            val snapshot = collection.whereEqualTo("idEmprendimiento", idEmprendimiento).get().await()
+            snapshot.documents.mapNotNull { doc ->
+                val id = doc.getString("id") ?: return@mapNotNull null
+                val idEmpr = doc.getString("idEmprendimiento") ?: return@mapNotNull null
+                val imagen = doc.getString("imagen") ?: return@mapNotNull null
+                val nombre = doc.getString("nombreProducto") ?: return@mapNotNull null
+                val descripcion = doc.getString("descripcion") ?: return@mapNotNull null
+                val precio = doc.getString("precio") ?: return@mapNotNull null
+
+                Producto(
+                    id = id,
+                    idEmprendimiento = idEmpr,
+                    imagen = imagen,
+                    nombreProducto = nombre,
+                    descripcion = descripcion,
+                    precio = precio
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("Firebase", "Error fetching productos for emprendimiento", e)
+            emptyList()
+        }
+    }
 }
 
 class FirebaseServiceHistorial(

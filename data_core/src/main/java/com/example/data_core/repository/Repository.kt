@@ -201,6 +201,14 @@ class ProductoRepository (
 
         }
     }
+
+    suspend fun getProductosByEmprendimiento(idEmprendimiento: String): List<Producto> {
+        return try {
+            firebaseService.getProductosByEmprendimiento(idEmprendimiento)
+        } catch (_: Exception) {
+            emptyList()
+        }
+    }
 }
 
 class HistorialRepository (
