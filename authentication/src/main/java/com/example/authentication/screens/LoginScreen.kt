@@ -37,36 +37,42 @@ fun LoginScreen(
     onRegisterClick: () -> Unit = {},
     onLoginSuccess: () -> Unit = {}
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.secondary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            painterResource(R.drawable.logospotme),
-            contentDescription = "Icono de SpotMe",
-            modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
 
-        Text(
-            "SpotMe",
-            fontSize = 55.sp,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold
-        )
+            Icon(
+                painterResource(R.drawable.logospotme),
+                contentDescription = "Icono de SpotMe",
+                modifier = Modifier.size(100.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
 
-        AuthenticationNavMenu(
-            selectMenu = "login",
-            onLoginClick = onLoginClick,
-            onRegisterClick = onRegisterClick,
-        )
+            Text(
+                "SpotMe",
+                fontSize = 55.sp,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
+            AuthenticationNavMenu(
+                selectMenu = "login",
+                onLoginClick = onLoginClick,
+                onRegisterClick = onRegisterClick,
+            )
 
-        LoginFields(viewModel = viewModel, onLoginSuccess = onLoginSuccess)
+            Spacer(modifier = Modifier.height(24.dp))
+
+            LoginFields(viewModel = viewModel, onLoginSuccess = onLoginSuccess)
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
 }
 

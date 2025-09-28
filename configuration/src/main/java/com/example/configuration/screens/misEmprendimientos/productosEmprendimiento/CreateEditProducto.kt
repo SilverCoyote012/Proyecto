@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -121,250 +122,317 @@ fun CreateEditProducto(
             )
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier.padding(innerPadding).fillMaxSize().fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card(
-                modifier = Modifier.height(25.dp),
-                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
-                shape = RoundedCornerShape(0.dp)
-            ) {
-                Text("'${nameEmpren}'",
-                    modifier = Modifier
-                        .fillMaxWidth().fillMaxHeight().padding(top = 2.dp),
-                    textAlign = TextAlign.Center,
-                    style =
-                        TextStyle(
-                            fontSize = 17.sp,
-                            color = MaterialTheme.colorScheme.onSecondaryContainer,
-                            fontWeight = FontWeight.ExtraBold
-                        )
-                )
-            }
-            AsyncImage(
-                imageEmpren,
-                contentDescription = "Imagen del negocio ${nameEmpren}",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth().height(90.dp)
-            )
-
-            Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 25.dp).fillMaxWidth()) {
-                //Nombre del producto
-                Text(
-                    text = "Nombre",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-                OutlinedTextField(
-                    value = nameProduct,
-                    onValueChange = {
-                        nameProduct = it
-                        if (it.isNotBlank()) nameError = ""
-                    },
-                    label = { Text("Ingrese nombre del producto",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Bold)
-                    },
-                    isError = nameError.isNotEmpty(),
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    singleLine = true,
-                    shape = RoundedCornerShape(5.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedContainerColor = MaterialTheme.colorScheme.background
-                    )
-                )
-                if (nameError.isNotBlank()) {
+            item {
+                Card(
+                    modifier = Modifier.height(25.dp),
+                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
+                    shape = RoundedCornerShape(0.dp)
+                ) {
                     Text(
-                        text = nameError,
-                        color = MaterialTheme.colorScheme.error,
-                        style = TextStyle(fontSize = 12.sp)
+                        "'${nameEmpren}'",
+                        modifier = Modifier
+                            .fillMaxWidth().fillMaxHeight().padding(top = 2.dp),
+                        textAlign = TextAlign.Center,
+                        style =
+                            TextStyle(
+                                fontSize = 17.sp,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                fontWeight = FontWeight.ExtraBold
+                            )
                     )
                 }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                //Imagen del producto
-                Text(
-                    text = "Imagen",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                AsyncImage(
+                    imageEmpren,
+                    contentDescription = "Imagen del negocio ${nameEmpren}",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxWidth().height(90.dp)
                 )
-                OutlinedTextField(
-                    value = imagenProduct,
-                    onValueChange = {
-                        imagenProduct = it
-                        if (it.isNotBlank()) imagenError = ""
-                    },
-                    label = { Text("Ingrese URL de imagen del producto",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Bold)
-                    },
-                    isError = imagenError.isNotEmpty(),
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    singleLine = true,
-                    shape = RoundedCornerShape(5.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedContainerColor = MaterialTheme.colorScheme.background
-                    )
-                )
-                if (imagenError.isNotBlank()) {
-                    Text(
-                        text = imagenError,
-                        color = MaterialTheme.colorScheme.error,
-                        style = TextStyle(fontSize = 12.sp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                //Descripción del producto
-                Text(
-                    text = "Descripción",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-                OutlinedTextField(
-                    value = descripProduct,
-                    onValueChange = {
-                        descripProduct = it
-                        if (it.isNotBlank()) descripError = ""
-                    },
-                    label = { Text("Ingrese descripción del producto",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Bold)
-                    },
-                    isError = descripError.isNotEmpty(),
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    maxLines = 4,
-                    shape = RoundedCornerShape(5.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedContainerColor = MaterialTheme.colorScheme.background
-                    )
-                )
-                if (descripError.isNotBlank()) {
-                    Text(
-                        text = descripError,
-                        color = MaterialTheme.colorScheme.error,
-                        style = TextStyle(fontSize = 12.sp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                //Costo del producto
-                Text(
-                    text = "Costo",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-                OutlinedTextField(
-                    value = costoProduct,
-                    onValueChange = { cost ->
-                        if (cost.matches(Regex("\\d*"))){
-                            costoProduct = cost
-                            if (cost.isNotBlank()) costoError = ""
-                        }
-                    },
-                    label = { Text("Ingrese costo del producto",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Bold)
-                    },
-                    isError = costoError.isNotEmpty(),
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    singleLine = true,
-                    shape = RoundedCornerShape(5.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedContainerColor = MaterialTheme.colorScheme.background
-                    )
-                )
-                if (costoError.isNotBlank()) {
-                    Text(
-                        text = costoError,
-                        color = MaterialTheme.colorScheme.error,
-                        style = TextStyle(fontSize = 12.sp)
-                    )
-                }
 
                 Column(
-                    modifier = Modifier.padding()
-                        .fillMaxSize().fillMaxWidth(),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 25.dp)
+                        .fillMaxWidth()
                 ) {
-                    Button(
-                        onClick = {
-                            when {
-                                nameProduct.isBlank() || descripProduct.isBlank() || costoProduct.isBlank() || imagenProduct.isBlank()  -> {
-                                    Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
-                                    if (nameProduct.isEmpty()) nameError = "Campo por llenar"
-                                    if (descripProduct.isEmpty()) descripError = "Campo por llenar"
-                                    if (costoProduct.isEmpty()) costoError = "Campo por llenar"
-                                    if (imagenProduct.isEmpty()) imagenError = "Campo por llenar"
-                                }
-                                !android.util.Patterns.WEB_URL.matcher(imagenProduct).matches() ->{
-                                    Toast.makeText(context, "Error en el formato de URL de imagen", Toast.LENGTH_SHORT).show()
-                                    imagenError = "Error en formato"
-                                }
-                                nameProduct.length > 30 -> {
-                                    Toast.makeText(context, "Exceso de caracteres", Toast.LENGTH_SHORT).show()
-                                    nameError = "Máximo 30 caracteres"
-                                }
-                                descripProduct.length > 70 -> {
-                                    Toast.makeText(context, "Exceso de caracteres", Toast.LENGTH_SHORT).show()
-                                    descripError = "Máximo 70 caracteres"
-                                }
-                                else -> {
-                                    try {
-                                        val producto = Producto(id = existingProduct?.id ?: UUID.randomUUID().toString(), idEmprendimiento = idEmpren, nombreProducto = nameProduct, descripcion = descripProduct, imagen = imagenProduct, precio = costoProduct)
-                                        val fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-                                        if (existingProduct == null){
-                                            viewModel.addProducto(producto)
-                                            val accion = "Creación de producto '$nameProduct' en emprendimiento '$nameEmpren"
-                                            viewModelAccion.addHistorial( Historial( idUsuario = emprenSelect?.idUsuario ?: UUID.randomUUID().toString(), accion = accion, fecha = fecha))
-                                        }else{
-                                            viewModel.updateProducto(producto)
-                                            val accion = "Actualizo producto '$nameProduct' del emprendimiento '$nameEmpren"
-                                            viewModelAccion.addHistorial( Historial( idUsuario = emprenSelect?.idUsuario ?: UUID.randomUUID().toString(), accion = accion, fecha = fecha))
-                                        }
-                                        onBackPage()
-                                    } catch (_: Exception) { }
-                                }
+                    //Nombre del producto
+                    Text(
+                        text = "Nombre",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    OutlinedTextField(
+                        value = nameProduct,
+                        onValueChange = {
+                            nameProduct = it
+                            if (it.isNotBlank()) nameError = ""
+                        },
+                        label = {
+                            Text(
+                                "Ingrese nombre del producto",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        isError = nameError.isNotEmpty(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        singleLine = true,
+                        shape = RoundedCornerShape(5.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedContainerColor = MaterialTheme.colorScheme.background
+                        )
+                    )
+                    if (nameError.isNotBlank()) {
+                        Text(
+                            text = nameError,
+                            color = MaterialTheme.colorScheme.error,
+                            style = TextStyle(fontSize = 12.sp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    //Imagen del producto
+                    Text(
+                        text = "Imagen",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    OutlinedTextField(
+                        value = imagenProduct,
+                        onValueChange = {
+                            imagenProduct = it
+                            if (it.isNotBlank()) imagenError = ""
+                        },
+                        label = {
+                            Text(
+                                "Ingrese URL de imagen del producto",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        isError = imagenError.isNotEmpty(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        singleLine = true,
+                        shape = RoundedCornerShape(5.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedContainerColor = MaterialTheme.colorScheme.background
+                        )
+                    )
+                    if (imagenError.isNotBlank()) {
+                        Text(
+                            text = imagenError,
+                            color = MaterialTheme.colorScheme.error,
+                            style = TextStyle(fontSize = 12.sp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    //Descripción del producto
+                    Text(
+                        text = "Descripción",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    OutlinedTextField(
+                        value = descripProduct,
+                        onValueChange = {
+                            descripProduct = it
+                            if (it.isNotBlank()) descripError = ""
+                        },
+                        label = {
+                            Text(
+                                "Ingrese descripción del producto",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        isError = descripError.isNotEmpty(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        maxLines = 4,
+                        shape = RoundedCornerShape(5.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedContainerColor = MaterialTheme.colorScheme.background
+                        )
+                    )
+                    if (descripError.isNotBlank()) {
+                        Text(
+                            text = descripError,
+                            color = MaterialTheme.colorScheme.error,
+                            style = TextStyle(fontSize = 12.sp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    //Costo del producto
+                    Text(
+                        text = "Costo",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    OutlinedTextField(
+                        value = costoProduct,
+                        onValueChange = { cost ->
+                            if (cost.matches(Regex("\\d*"))) {
+                                costoProduct = cost
+                                if (cost.isNotBlank()) costoError = ""
                             }
                         },
-                        modifier = Modifier.width(277.dp).padding(bottom = 40.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                        shape = RoundedCornerShape(30.dp)
-                    ) {
-                        Text(
-                            text = if (existingProduct == null) "Crear producto" else "Actualizar producto",
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White, fontSize = 15.sp
+                        label = {
+                            Text(
+                                "Ingrese costo del producto",
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        isError = costoError.isNotEmpty(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        singleLine = true,
+                        shape = RoundedCornerShape(5.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedContainerColor = MaterialTheme.colorScheme.background
                         )
+                    )
+                    if (costoError.isNotBlank()) {
+                        Text(
+                            text = costoError,
+                            color = MaterialTheme.colorScheme.error,
+                            style = TextStyle(fontSize = 12.sp)
+                        )
+                    }
+
+                    Column(
+                        modifier = Modifier.padding()
+                            .fillMaxSize().fillMaxWidth(),
+                        verticalArrangement = Arrangement.Bottom,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Button(
+                            onClick = {
+                                when {
+                                    nameProduct.isBlank() || descripProduct.isBlank() || costoProduct.isBlank() || imagenProduct.isBlank() -> {
+                                        Toast.makeText(
+                                            context,
+                                            "Alguno de los campos está vacío",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        if (nameProduct.isEmpty()) nameError = "Campo por llenar"
+                                        if (descripProduct.isEmpty()) descripError =
+                                            "Campo por llenar"
+                                        if (costoProduct.isEmpty()) costoError = "Campo por llenar"
+                                        if (imagenProduct.isEmpty()) imagenError =
+                                            "Campo por llenar"
+                                    }
+
+                                    !android.util.Patterns.WEB_URL.matcher(imagenProduct)
+                                        .matches() -> {
+                                        Toast.makeText(
+                                            context,
+                                            "Error en el formato de URL de imagen",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        imagenError = "Error en formato"
+                                    }
+
+                                    nameProduct.length > 30 -> {
+                                        Toast.makeText(
+                                            context,
+                                            "Exceso de caracteres",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        nameError = "Máximo 30 caracteres"
+                                    }
+
+                                    descripProduct.length > 70 -> {
+                                        Toast.makeText(
+                                            context,
+                                            "Exceso de caracteres",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        descripError = "Máximo 70 caracteres"
+                                    }
+
+                                    else -> {
+                                        try {
+                                            val producto = Producto(
+                                                id = existingProduct?.id ?: UUID.randomUUID()
+                                                    .toString(),
+                                                idEmprendimiento = idEmpren,
+                                                nombreProducto = nameProduct,
+                                                descripcion = descripProduct,
+                                                imagen = imagenProduct,
+                                                precio = costoProduct
+                                            )
+                                            val fecha = LocalDateTime.now()
+                                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                                            if (existingProduct == null) {
+                                                viewModel.addProducto(producto)
+                                                val accion =
+                                                    "Creación de producto '$nameProduct' en emprendimiento '$nameEmpren"
+                                                viewModelAccion.addHistorial(
+                                                    Historial(
+                                                        idUsuario = emprenSelect?.idUsuario
+                                                            ?: UUID.randomUUID().toString(),
+                                                        accion = accion,
+                                                        fecha = fecha
+                                                    )
+                                                )
+                                            } else {
+                                                viewModel.updateProducto(producto)
+                                                val accion =
+                                                    "Actualizo producto '$nameProduct' del emprendimiento '$nameEmpren"
+                                                viewModelAccion.addHistorial(
+                                                    Historial(
+                                                        idUsuario = emprenSelect?.idUsuario
+                                                            ?: UUID.randomUUID().toString(),
+                                                        accion = accion,
+                                                        fecha = fecha
+                                                    )
+                                                )
+                                            }
+                                            onBackPage()
+                                        } catch (_: Exception) {
+                                        }
+                                    }
+                                }
+                            },
+                            modifier = Modifier.width(277.dp).padding(bottom = 40.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                            shape = RoundedCornerShape(30.dp)
+                        ) {
+                            Text(
+                                text = if (existingProduct == null) "Crear producto" else "Actualizar producto",
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.White, fontSize = 15.sp
+                            )
+                        }
                     }
                 }
             }

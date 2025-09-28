@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -35,36 +36,42 @@ fun RegisterScreen(
     onLoginClick: () -> Unit = {},
     onRegisterClick: () -> Unit = {}
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.secondary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            painterResource(R.drawable.logospotme),
-            contentDescription = "Icono de SpotMe",
-            modifier = Modifier.size(100.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
 
-        Text(
-            "SpotMe",
-            fontSize = 55.sp,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold
-        )
+            Icon(
+                painterResource(R.drawable.logospotme),
+                contentDescription = "Icono de SpotMe",
+                modifier = Modifier.size(100.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
 
-        AuthenticationNavMenu(
-            selectMenu = "register",
-            onLoginClick = onLoginClick,
-            onRegisterClick = onRegisterClick
-        )
+            Text(
+                "SpotMe",
+                fontSize = 55.sp,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
 
-        Spacer(modifier = Modifier.height(24.dp))
+            AuthenticationNavMenu(
+                selectMenu = "register",
+                onLoginClick = onLoginClick,
+                onRegisterClick = onRegisterClick
+            )
 
-        RegisterFields(viewModel = viewModel, onLoginClick = onLoginClick)
+            Spacer(modifier = Modifier.height(24.dp))
+
+            RegisterFields(viewModel = viewModel, onLoginClick = onLoginClick)
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
     }
 }
 

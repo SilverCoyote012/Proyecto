@@ -3,12 +3,14 @@ package com.example.configuration.screens.configuracion
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -80,116 +82,143 @@ fun MenuConfig(
     { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxSize().fillMaxWidth()
-                .padding(innerPadding).padding(12.dp)
-                .background(MaterialTheme.colorScheme.background),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(MaterialTheme.colorScheme.background)
         ) {
-            Card(
-                modifier = Modifier.fillMaxWidth().size(85.dp)
-                    .clickable { onPerfilClick() },
-                colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)),
-                shape = RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp),
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                contentPadding = PaddingValues(top = 12.dp)
             ) {
-                Text("Mi perfil",
-                    modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 4.dp),
-                    fontSize = 17.sp, fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.tertiary
-                )
-                Text("Consulta tu información personal y editala cuando lo necesites.",
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                    fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
-                    lineHeight = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().size(85.dp)
+                            .clickable { onPerfilClick() },
+                        colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)),
+                        shape = RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp),
+                    ) {
+                        Text("Mi perfil",
+                            modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 4.dp),
+                            fontSize = 17.sp, fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                        Text("Consulta tu información personal y editala cuando lo necesites.",
+                            modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                            fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
+                            lineHeight = 15.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                item {
+                    Divider(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.padding(10.dp))
+                }
+
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().size(85.dp)
+                            .clickable { onEmprendimientosClick() },
+                        colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)),
+                        shape = RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)
+                    ) {
+                        Text("Mis emprendimientos",
+                            modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 4.dp),
+                            fontSize = 17.sp, fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                        Text("Consulta tus emprendimientos y editalos cuando lo necesites.",
+                            modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                            fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
+                            lineHeight = 15.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                item {
+                    Divider(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.padding(10.dp))
+                }
+
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().size(85.dp)
+                            .clickable { onHistorialClick() },
+                        colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)),
+                        shape = RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)
+                    ) {
+                        Text("Historial",
+                            modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 4.dp),
+                            fontSize = 17.sp, fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                        Text("Consulta tu acciones a lo largo del uso de la app.",
+                            modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                            fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
+                            lineHeight = 15.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                item {
+                    Divider(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.padding(10.dp))
+                }
+
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth().size(85.dp)
+                            .clickable { onConfigClick() },
+                        colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)),
+                        shape = RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)
+                    ) {
+                        Text("Configuración",
+                            modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 4.dp),
+                            fontSize = 17.sp, fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                        Text("Ajustes y preferencias de la aplicación.",
+                            modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                            fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
+                            lineHeight = 15.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                item {
+                    Divider(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
-            Divider(
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.padding(10.dp))
-
-            Card(
-                modifier = Modifier.fillMaxWidth().size(85.dp)
-                    .clickable { onEmprendimientosClick() },
-                colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)),
-                shape = RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)
-            ) {
-                Text("Mis emprendimientos",
-                    modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 4.dp),
-                    fontSize = 17.sp, fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.tertiary
-                )
-                Text("Consulta tus emprendimientos y editalos cuando lo necesites.",
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                    fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
-                    lineHeight = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            Divider(
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.padding(10.dp))
-
-            Card(
-                modifier = Modifier.fillMaxWidth().size(85.dp)
-                    .clickable { onHistorialClick() },
-                colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)),
-                shape = RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)
-            ) {
-                Text("Historial",
-                    modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 4.dp),
-                    fontSize = 17.sp, fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.tertiary
-                )
-                Text("Consulta tu acciones a lo largo del uso de la app.",
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                    fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
-                    lineHeight = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            Divider(
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.padding(10.dp))
-
-            Card(
-                modifier = Modifier.fillMaxWidth().size(85.dp)
-                    .clickable { onConfigClick() },
-                colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)),
-                shape = RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)
-            ) {
-                Text("Configuración",
-                    modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 4.dp),
-                    fontSize = 17.sp, fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.tertiary
-                )
-                Text("Ajustes y preferencias de la aplicación.",
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                    fontSize = 12.sp, fontWeight = FontWeight.SemiBold,
-                    lineHeight = 15.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            Divider(
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
 
             Button(
                 onClick = {
                     viewModel.logout()
-                    onLogOut() },
-                modifier = Modifier.width(277.dp).padding(10.dp),
+                    onLogOut()
+                },
+                modifier = Modifier
+                    .width(277.dp)
+                    .padding(10.dp)
+                    .align(Alignment.CenterHorizontally),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onTertiary),
                 shape = RoundedCornerShape(7.dp)
             ) {

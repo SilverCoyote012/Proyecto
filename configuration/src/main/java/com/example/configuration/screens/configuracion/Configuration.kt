@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -231,24 +232,26 @@ fun configuracionApp(
             )
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(start = 10.dp, end = 10.dp, top = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            cardModo(
-                selectModo = selectModo,
-                onSelectModo = { nuevoModo -> onSelectModo(nuevoModo) }
-            )
+            item {
+                cardModo(
+                    selectModo = selectModo,
+                    onSelectModo = { nuevoModo -> onSelectModo(nuevoModo) }
+                )
 
-            Spacer(modifier = Modifier.padding(15.dp))
+                Spacer(modifier = Modifier.padding(15.dp))
 
-            //Manejo de Icono a Texto en la pantalla de Catalogo de Emprendimientos
-            cardPreferencia(
-                selectOpcion = selectOpcion,
-                onSelectOpcion = { select -> onSelectOpcion(select) }
-            )
+                //Manejo de Icono a Texto en la pantalla de Catalogo de Emprendimientos
+                cardPreferencia(
+                    selectOpcion = selectOpcion,
+                    onSelectOpcion = { select -> onSelectOpcion(select) }
+                )
+            }
         }
     }
 }

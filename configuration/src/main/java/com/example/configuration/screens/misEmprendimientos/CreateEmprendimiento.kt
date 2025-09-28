@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -137,285 +138,287 @@ fun createEmprendimiento(
             )
         }
     ) { innerPadding ->
-        Column(
+        LazyColumn(
             modifier = Modifier.padding(innerPadding)
                 .padding(20.dp).fillMaxSize().fillMaxWidth(),
             //horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            //Nombre del negocio
-            Text(
-                text = "Nombre",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-            OutlinedTextField(
-                value = name,
-                onValueChange = {
-                    name = it
-                    if (it.isNotBlank()) nameError = ""
-                                },
-                label = { Text("Ingrese nombre del negocio",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold)
-                },
-                isError = nameError.isNotEmpty(),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                singleLine = true,
-                shape = RoundedCornerShape(5.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    focusedContainerColor = MaterialTheme.colorScheme.background
-                )
-            )
-            if (nameError.isNotBlank()) {
+            item {
+                //Nombre del negocio
                 Text(
-                    text = nameError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = TextStyle(fontSize = 12.sp)
+                    text = "Nombre",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            //Descripción del negocio
-            Text(
-                text = "Descripción",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-            OutlinedTextField(
-                value = descripcion,
-                onValueChange = {
-                    descripcion = it
-                    if (it.isNotBlank()) descripcionError = ""
-                },
-                label = { Text("Ingrese nombre del negocio",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold)
-                },
-                isError = descripcionError.isNotEmpty(),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                singleLine = true,
-                shape = RoundedCornerShape(5.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    focusedContainerColor = MaterialTheme.colorScheme.background
-                )
-            )
-            if (descripcionError.isNotBlank()) {
-                Text(
-                    text = descripcionError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = TextStyle(fontSize = 12.sp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            //Lista de categorias desplegable
-            Text(
-                text = "Categoria",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
-            ) {
                 OutlinedTextField(
-                    value = selectCategoria,
+                    value = name,
                     onValueChange = {
-                        if (it.isNotBlank()) selectError = ""
-                    },
-                    readOnly = true,
-                    label = { Text("Seleccione una categoria del negocio",
+                        name = it
+                        if (it.isNotBlank()) nameError = ""
+                                    },
+                    label = { Text("Ingrese nombre del negocio",
                         color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                        fontWeight = FontWeight.Bold)
                     },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                    },
+                    isError = nameError.isNotEmpty(),
                     modifier = Modifier
-                        .menuAnchor().fillMaxWidth(),
+                        .fillMaxWidth(),
+                    singleLine = true,
+                    shape = RoundedCornerShape(5.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
                         unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedTrailingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                        unfocusedTrailingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        focusedContainerColor = MaterialTheme.colorScheme.background
                     )
                 )
+                if (nameError.isNotBlank()) {
+                    Text(
+                        text = nameError,
+                        color = MaterialTheme.colorScheme.error,
+                        style = TextStyle(fontSize = 12.sp)
+                    )
+                }
 
-                ExposedDropdownMenu(
-                    expanded = expanded, onDismissRequest = { expanded = false },
-                    modifier = Modifier.background(MaterialTheme.colorScheme.onSurfaceVariant)
+                Spacer(modifier = Modifier.height(12.dp))
+
+                //Descripción del negocio
+                Text(
+                    text = "Descripción",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                OutlinedTextField(
+                    value = descripcion,
+                    onValueChange = {
+                        descripcion = it
+                        if (it.isNotBlank()) descripcionError = ""
+                    },
+                    label = { Text("Ingrese nombre del negocio",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold)
+                    },
+                    isError = descripcionError.isNotEmpty(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    singleLine = true,
+                    shape = RoundedCornerShape(5.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedContainerColor = MaterialTheme.colorScheme.background
+                    )
+                )
+                if (descripcionError.isNotBlank()) {
+                    Text(
+                        text = descripcionError,
+                        color = MaterialTheme.colorScheme.error,
+                        style = TextStyle(fontSize = 12.sp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                //Lista de categorias desplegable
+                Text(
+                    text = "Categoria",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded }
                 ) {
-                    categorias.forEach { categoria ->
-                        DropdownMenuItem(
-                            text = { Text(categoria) },
-                            onClick = {
-                                selectError = ""
-                                selectCategoria = categoria
-                                expanded = false
-                            }
+                    OutlinedTextField(
+                        value = selectCategoria,
+                        onValueChange = {
+                            if (it.isNotBlank()) selectError = ""
+                        },
+                        readOnly = true,
+                        label = { Text("Seleccione una categoria del negocio",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                        },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                        },
+                        modifier = Modifier
+                            .menuAnchor().fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedContainerColor = MaterialTheme.colorScheme.background,
+                            focusedTrailingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            unfocusedTrailingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded, onDismissRequest = { expanded = false },
+                        modifier = Modifier.background(MaterialTheme.colorScheme.onSurfaceVariant)
+                    ) {
+                        categorias.forEach { categoria ->
+                            DropdownMenuItem(
+                                text = { Text(categoria) },
+                                onClick = {
+                                    selectError = ""
+                                    selectCategoria = categoria
+                                    expanded = false
+                                }
+                            )
+                        }
                     }
                 }
-            }
-            if (selectError.isNotBlank()) {
-                Text(
-                    text = selectError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = TextStyle(fontSize = 12.sp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            //Numero telefonico
-            Text(
-                text = "Teléfono",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-            OutlinedTextField(
-                value = phone,
-                onValueChange = {
-                    phone = it
-                    if (it.isNotBlank()) phoneError = ""
-                },
-                label = { Text("Ingrese numero telefonico del negocio",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold)
-                },
-                isError = phoneError.isNotEmpty(),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                singleLine = true,
-                shape = RoundedCornerShape(5.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    focusedContainerColor = MaterialTheme.colorScheme.background
-                )
-            )
-            if (phoneError.isNotBlank()) {
-                Text(
-                    text = phoneError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = TextStyle(fontSize = 12.sp), textAlign = TextAlign.Start
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            //Imagen del negocio
-            Text(
-                text = "Imagen",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-            OutlinedTextField(
-                value = image,
-                onValueChange = {
-                    image = it
-                    if (it.isNotBlank()) imageError = ""
-                },
-                label = { Text("Ingrese la URL de imagen",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.Bold)
-                },
-                isError = imageError.isNotEmpty(),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                singleLine = true,
-                shape = RoundedCornerShape(5.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    focusedContainerColor = MaterialTheme.colorScheme.background
-                )
-            )
-            if (imageError.isNotBlank()) {
-                Text(
-                    text = imageError,
-                    color = MaterialTheme.colorScheme.error,
-                    style = TextStyle(fontSize = 12.sp)
-                )
-            }
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Button(
-                    onClick = {
-                        when {
-                            name.isBlank() || descripcion.isBlank() || phone.isBlank() || image.isBlank() || selectCategoria.isBlank()  -> {
-                                Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
-                                if (name.isEmpty()) nameError = "Campo por llenar"
-                                if (descripcion.isEmpty()) descripcionError = "Campo por llenar"
-                                if (phone.isEmpty()) phoneError = "Campo por llenar"
-                                if (image.isEmpty()) imageError = "Campo por llenar"
-                                if (selectCategoria.isEmpty()) selectError = "Campo por llenar"
-                            }
-                            !android.util.Patterns.PHONE.matcher(phone).matches() -> {
-                                Toast.makeText(context, "Error en el formato de telefono", Toast.LENGTH_SHORT).show()
-                                phoneError = "Error en formato"
-                            }
-                            !android.util.Patterns.WEB_URL.matcher(image).matches() ->{
-                                Toast.makeText(context, "Error en el formato de URL de imagen", Toast.LENGTH_SHORT).show()
-                                imageError = "Error en formato"
-                            }
-                            phone.length < 8 -> {
-                                Toast.makeText(context, "El telefono es de 8 digitos", Toast.LENGTH_SHORT).show()
-                                phoneError = "Formato de 8 digitos"
-                            }
-                            else -> {
-                                try {
-                                    viewModel.addEmprendimiento(
-                                        Emprendimiento(
-                                            idUsuario = userState?.id ?: hasError, nombreEmprendimiento = name,
-                                            imagen = image, telefono = phone, descripcion = descripcion, categoria = selectCategoria)
-                                    )
-                                    val fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-                                    val accion = "Creación de emprendimiento '$name'"
-                                    viewModelAccion.addHistorial( Historial( idUsuario = userState?.id ?: hasError, accion = accion, fecha = fecha)
-                                    )
-                                    onBackPage()
-                                } catch (_: Exception) { }
-                            }
-                        }
-                    },
-                    modifier = Modifier.padding(10.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    shape = RoundedCornerShape(5.dp)
-                ) {
+                if (selectError.isNotBlank()) {
                     Text(
-                        "Crear emprendimiento",
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White, fontSize = 15.sp
+                        text = selectError,
+                        color = MaterialTheme.colorScheme.error,
+                        style = TextStyle(fontSize = 12.sp)
                     )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                //Numero telefonico
+                Text(
+                    text = "Teléfono",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                OutlinedTextField(
+                    value = phone,
+                    onValueChange = {
+                        phone = it
+                        if (it.isNotBlank()) phoneError = ""
+                    },
+                    label = { Text("Ingrese numero telefonico del negocio",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold)
+                    },
+                    isError = phoneError.isNotEmpty(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    singleLine = true,
+                    shape = RoundedCornerShape(5.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedContainerColor = MaterialTheme.colorScheme.background
+                    )
+                )
+                if (phoneError.isNotBlank()) {
+                    Text(
+                        text = phoneError,
+                        color = MaterialTheme.colorScheme.error,
+                        style = TextStyle(fontSize = 12.sp), textAlign = TextAlign.Start
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                //Imagen del negocio
+                Text(
+                    text = "Imagen",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                OutlinedTextField(
+                    value = image,
+                    onValueChange = {
+                        image = it
+                        if (it.isNotBlank()) imageError = ""
+                    },
+                    label = { Text("Ingrese la URL de imagen",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Bold)
+                    },
+                    isError = imageError.isNotEmpty(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    singleLine = true,
+                    shape = RoundedCornerShape(5.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        focusedContainerColor = MaterialTheme.colorScheme.background
+                    )
+                )
+                if (imageError.isNotBlank()) {
+                    Text(
+                        text = imageError,
+                        color = MaterialTheme.colorScheme.error,
+                        style = TextStyle(fontSize = 12.sp)
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Button(
+                        onClick = {
+                            when {
+                                name.isBlank() || descripcion.isBlank() || phone.isBlank() || image.isBlank() || selectCategoria.isBlank()  -> {
+                                    Toast.makeText(context, "Alguno de los campos está vacío", Toast.LENGTH_SHORT).show()
+                                    if (name.isEmpty()) nameError = "Campo por llenar"
+                                    if (descripcion.isEmpty()) descripcionError = "Campo por llenar"
+                                    if (phone.isEmpty()) phoneError = "Campo por llenar"
+                                    if (image.isEmpty()) imageError = "Campo por llenar"
+                                    if (selectCategoria.isEmpty()) selectError = "Campo por llenar"
+                                }
+                                !android.util.Patterns.PHONE.matcher(phone).matches() -> {
+                                    Toast.makeText(context, "Error en el formato de telefono", Toast.LENGTH_SHORT).show()
+                                    phoneError = "Error en formato"
+                                }
+                                !android.util.Patterns.WEB_URL.matcher(image).matches() ->{
+                                    Toast.makeText(context, "Error en el formato de URL de imagen", Toast.LENGTH_SHORT).show()
+                                    imageError = "Error en formato"
+                                }
+                                phone.length < 8 -> {
+                                    Toast.makeText(context, "El telefono es de 8 digitos", Toast.LENGTH_SHORT).show()
+                                    phoneError = "Formato de 8 digitos"
+                                }
+                                else -> {
+                                    try {
+                                        viewModel.addEmprendimiento(
+                                            Emprendimiento(
+                                                idUsuario = userState?.id ?: hasError, nombreEmprendimiento = name,
+                                                imagen = image, telefono = phone, descripcion = descripcion, categoria = selectCategoria)
+                                        )
+                                        val fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                                        val accion = "Creación de emprendimiento '$name'"
+                                        viewModelAccion.addHistorial( Historial( idUsuario = userState?.id ?: hasError, accion = accion, fecha = fecha)
+                                        )
+                                        onBackPage()
+                                    } catch (_: Exception) { }
+                                }
+                            }
+                        },
+                        modifier = Modifier.padding(10.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                        shape = RoundedCornerShape(5.dp)
+                    ) {
+                        Text(
+                            "Crear emprendimiento",
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White, fontSize = 15.sp
+                        )
+                    }
                 }
             }
         }

@@ -304,6 +304,7 @@ fun ProductosEmprendimiento(
                      }
                  }
              }
+
              Spacer(modifier = Modifier.height(16.dp))
 
              FloatingActionButton(
