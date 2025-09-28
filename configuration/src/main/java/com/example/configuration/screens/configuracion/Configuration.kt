@@ -117,8 +117,7 @@ fun cardModo(selectModo: Boolean, onSelectModo: (Boolean) -> Unit = {} ){
 }
 
 @Composable
-fun cardPreferencia(onSelectModo: (Boolean) -> Unit = {}){
-    var selectModo = false
+fun cardPreferencia(onSelectOpcion: (Boolean) -> Unit = {}, selectOpcion: Boolean){
     Card(
         modifier = Modifier.fillMaxWidth().padding(10.dp),
         colors =  CardDefaults.cardColors(MaterialTheme.colorScheme.onSurfaceVariant),
@@ -142,21 +141,21 @@ fun cardPreferencia(onSelectModo: (Boolean) -> Unit = {}){
             )
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(10.dp)) {
                 Column( modifier = Modifier.weight(1f).height(50.dp).padding(bottom = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    if (!selectModo) {
+                    if (!selectOpcion) {
+                        Text(
+                            "Iconos", modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
+                            textAlign = TextAlign.Center, color = GrayWhite_themeLight
+                        )
+                    } else {
                         Text(
                             "Iconos", modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
                             textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold,
                             fontSize = 15.sp, color = PinkBrown_themeLight
                         )
-                    } else {
-                        Text(
-                            "Iconos", modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
-                            textAlign = TextAlign.Center, color = GrayWhite_themeLight
-                        )
                     }
                     RadioButton(
-                        selected = !selectModo,
-                        onClick = { onSelectModo(false) },
+                        selected = selectOpcion,
+                        onClick = { onSelectOpcion(true) },
                         colors = RadioButtonDefaults.colors(
                             selectedColor = PinkBrown_themeLight,
                             unselectedColor = GrayWhite_themeLight,
@@ -165,7 +164,7 @@ fun cardPreferencia(onSelectModo: (Boolean) -> Unit = {}){
                     )
                 }
                 Column(modifier = Modifier.weight(1f).height(50.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    if (!selectModo) {
+                    if (!selectOpcion) {
                         Text(
                             "Texto", modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
                             textAlign = TextAlign.Center, fontWeight = FontWeight.ExtraBold,
@@ -174,12 +173,12 @@ fun cardPreferencia(onSelectModo: (Boolean) -> Unit = {}){
                     } else {
                         Text(
                             "Texto", modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
-                            textAlign = TextAlign.Center, color = GrayWhite_themeLight
+                            textAlign = TextAlign.Center, color = Color.Black
                         )
                     }
                     RadioButton(
-                        selected = selectModo,
-                        onClick = { onSelectModo(true) },
+                        selected = !selectOpcion,
+                        onClick = { onSelectOpcion(false) },
                         colors = RadioButtonDefaults.colors(
                             selectedColor = PinkBrown_themeLight,
                             unselectedColor = GrayWhite_themeLight,
@@ -197,7 +196,10 @@ fun cardPreferencia(onSelectModo: (Boolean) -> Unit = {}){
 fun configuracionApp(
     onBackPage: () -> Unit = {},
     selectModo: Boolean,
-    onSelectModo: (Boolean) -> Unit = {} ){
+    onSelectModo: (Boolean) -> Unit = {},
+    selectOpcion: Boolean,
+    onSelectOpcion: (Boolean) -> Unit = {}
+){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -242,18 +244,21 @@ fun configuracionApp(
 
             Spacer(modifier = Modifier.padding(15.dp))
 
-            //Falta manejo de Icono a Texto en la pantalla de Catalogo de Emprendimientos
-            cardPreferencia()
+            //Manejo de Icono a Texto en la pantalla de Catalogo de Emprendimientos
+            cardPreferencia(
+                selectOpcion = selectOpcion,
+                onSelectOpcion = { select -> onSelectOpcion(select) }
+            )
         }
     }
 }
 
-@Preview(showBackground = true/*, showSystemUi = true*/)
-@Composable
-fun muestra() {
-    ProyectoTheme(darkTheme = false) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            cardPreferencia()
-        }
-    }
-}
+//@Preview(showBackground = true/*, showSystemUi = true*/)
+//@Composable
+//fun muestra() {
+//    ProyectoTheme(darkTheme = false) {
+//        Column(modifier = Modifier.fillMaxSize()) {
+//            cardPreferencia()
+//        }
+//    }
+//}
