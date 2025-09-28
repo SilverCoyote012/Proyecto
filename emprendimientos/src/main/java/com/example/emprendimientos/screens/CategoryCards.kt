@@ -66,8 +66,7 @@ fun CategorySelectedScreen(
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(vertical = 8.dp, horizontal = 16.dp)
-                .background(Color.White),
+                .padding(vertical = 8.dp, horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(filteredEmprendimientos) { emprendimiento ->
@@ -91,7 +90,6 @@ private fun CategoryHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primaryContainer)
             .padding(16.dp)
     ) {
         Text(

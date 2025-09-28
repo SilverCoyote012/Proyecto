@@ -39,7 +39,7 @@ fun menuCategory(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally)
     ) {
         val categoriesIcons = listOf(
@@ -164,7 +164,6 @@ fun CatalogoScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(vertical = 8.dp, horizontal = 16.dp)
-                .background(Color.White)
         ) {
             items(filteredEmprendimientos) { emprendimiento ->
                 EmprendimientoItem(

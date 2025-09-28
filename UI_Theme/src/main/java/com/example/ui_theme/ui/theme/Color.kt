@@ -30,3 +30,5 @@ val Gray_themeDark = Color(0xFFE0DEE3)
 val white_themeDark = Color(0xFFFFFFFF)
 val LightBrownPink_themeDark = Color(0xFFC78A8A)
 val GreyBlack = Color(0xFF171717)
+
+val  pink = Color(0xFFFFEBE0)
