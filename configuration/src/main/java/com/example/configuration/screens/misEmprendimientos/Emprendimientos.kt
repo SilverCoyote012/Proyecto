@@ -123,7 +123,8 @@ fun cardEmprendimientoUser(
                             offset = Offset(0f, 4f),
                             blurRadius = 5f
                         )
-                    )
+                    ),
+                    maxLines = 1,
                 )
             }
         }

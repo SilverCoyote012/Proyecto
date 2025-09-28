@@ -2,6 +2,7 @@ package com.example.data_core.model
 
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -148,6 +149,17 @@ class EmprendimientoModel(private val repository: EmprendimientoRepository) : Vi
         }
     }
 
+    private val _emprendimientosFirebase = MutableStateFlow<List<Emprendimiento>>(emptyList())
+    val emprendimientosFirebase: StateFlow<List<Emprendimiento>> = _emprendimientosFirebase.asStateFlow()
+
+    fun getEmprendimientosFromFirebase() {
+        viewModelScope.launch {
+            val data = repository.getAllEmprendimientosFromFirebase()
+            //Log.d("DEBUG", "Firebase data: $data")
+            _emprendimientosFirebase.value = data
+        }
+    }
+
     fun addEmprendimiento(emprendimiento: Emprendimiento) {
         viewModelScope.launch {
             repository.insert(emprendimiento)
@@ -176,6 +188,10 @@ class EmprendimientoModel(private val repository: EmprendimientoRepository) : Vi
     fun getEmprendimientoById(emprenId: String) {
         val empr = _emprendimiento.value.find { it.id == emprenId }
         _emprendimientoSelect.value = empr
+    }
+
+    fun getEmprendimientoByIdScreen(id: String): Emprendimiento? {
+        return emprendimiento.value.find { it.id == id }
     }
 }
 

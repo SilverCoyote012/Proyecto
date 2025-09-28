@@ -125,6 +125,14 @@ class EmprendimientoRepository (
 ) {
     fun getAllEmprendimientos(): Flow<List<Emprendimiento>> = emprendimientoDao.getAllEmprendimientos()
 
+    suspend fun getAllEmprendimientosFromFirebase(): List<Emprendimiento> {
+        return try {
+            firebaseService.getAllEmprendimientos()
+        } catch (_: Exception) {
+            emptyList()
+        }
+    }
+
     suspend fun insert(emprendimiento: Emprendimiento) {
         emprendimientoDao.insertEmprendimiento(emprendimiento)
         try {
@@ -149,6 +157,14 @@ class EmprendimientoRepository (
             firebaseService.deleteEmprendimiento(emprendimiento.id)
         } catch (_: Exception) {
 
+        }
+    }
+
+    suspend fun getEmprendimientoById(id: String): Emprendimiento? {
+        return try {
+            firebaseService.getEmprendimientoById(id)
+        } catch (_: Exception) {
+            null
         }
     }
 }

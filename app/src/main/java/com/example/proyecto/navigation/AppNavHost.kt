@@ -17,6 +17,9 @@ import com.example.configuration.screens.historial.*
 import com.example.configuration.screens.miPerfil.*
 import com.example.configuration.screens.misEmprendimientos.*
 import com.example.configuration.screens.misEmprendimientos.productosEmprendimiento.*
+import com.example.emprendimientos.screens.CatalogoScreen
+import com.example.emprendimientos.screens.EmprendimientoScreen
+import com.example.emprendimientos.screens.EmprendimientosScreen
 
 @Composable
 fun AppNavHost(
@@ -41,7 +44,7 @@ fun AppNavHost(
             viewModel = viewModelUser,
             onLoginClick = {  },
             onRegisterClick = { navController.navigate("register") },
-            onLoginSuccess = { navController.navigate("configuracionMenu") }
+            onLoginSuccess = { navController.navigate("home") }
         ) }
         composable("register") { RegisterScreen(
             viewModel = viewModelUser,
@@ -50,14 +53,43 @@ fun AppNavHost(
         ) }
 
 //        // Emprendimientos
-//        composable("home") {}
-//        composable("catalogo") {}
-//        composable("emprendimiento_detalle") {}
-//
+        composable("home") {
+            EmprendimientosScreen(
+                onSelectEmprendimiento = { idEmprendimiento ->
+                    navController.navigate("emprendimiento_detalle/$idEmprendimiento")
+                },
+                viewModel = viewModelEmprendimiento,
+                onLogoClick = { navController.navigate("home") },
+                onEmprendimientosClick = { navController.navigate("catalogo") },
+                onPerfilClick = { navController.navigate("configuracionMenu") }
+            )
+        }
+        composable("catalogo") {
+            CatalogoScreen(
+                viewModel = viewModelEmprendimiento,
+                onLogoClick = { navController.navigate("home") },
+                onSelectEmprendimiento = { idEmprendimiento ->
+                    navController.navigate("emprendimiento_detalle/$idEmprendimiento")
+                },
+                onPerfilClick = { navController.navigate("configuracionMenu") }
+            )
+        }
+        composable(
+            "emprendimiento_detalle/{idEmprendimiento}",
+            arguments = listOf(navArgument("idEmprendimiento") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val idEmprendimiento = backStackEntry.arguments?.getString("idEmprendimiento") ?: ""
+            EmprendimientoScreen(
+                onNavigateBack = { navController.navigate("home") },
+                viewModel = viewModelEmprendimiento,
+                viewModelProductos = viewModelProducto,
+                idEmprendimiento = idEmprendimiento
+        ) }
+
 // Configuration
         composable("configuracionMenu") {
             MenuConfig (
-                onNavigateBack = {  },
+                onNavigateBack = { navController.navigate("home") },
                 onLogOut = { navController.navigate("SplashScreen") },
                 onPerfilClick = { navController.navigate("EditarUsuario") },
                 onEmprendimientosClick = { navController.navigate("UsuarioEmprendimientos") },

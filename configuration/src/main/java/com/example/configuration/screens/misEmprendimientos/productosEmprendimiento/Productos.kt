@@ -122,12 +122,14 @@ fun cardProductoEdit(
                         producto.nombreProducto,
                         modifier = Modifier.fillMaxWidth(),
                         fontSize = 14.sp, color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold
+                        fontStyle = FontStyle.Italic, fontWeight = FontWeight.ExtraBold,
+                        maxLines = 1
                     )
                     Text(
                         producto.descripcion,
                         modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp), style = TextStyle(lineHeight = 15.sp),
                         fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        maxLines = 2
                     )
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(
@@ -137,6 +139,7 @@ fun cardProductoEdit(
                             fontStyle = FontStyle.Italic,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.tertiary,
+                            maxLines = 1
                         )
                         IconButton(
                             onClick = { onEditClick(producto) },
@@ -222,7 +225,8 @@ fun ProductosEmprendimiento(
                                  fontSize = 25.sp,
                                  color = MaterialTheme.colorScheme.surface,
                                  fontWeight = FontWeight.ExtraBold
-                             )
+                             ),
+                         maxLines = 1
                      )
                  }
              )

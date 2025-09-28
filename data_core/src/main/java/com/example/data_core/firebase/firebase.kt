@@ -199,10 +199,29 @@ class FirebaseServiceEmprendimiento(
 
     suspend fun getAllEmprendimientos(): List<Emprendimiento> {
         return try {
-            collection.get().await().documents.mapNotNull {
-                it.toObject(Emprendimiento::class.java)
+            val snapshot = collection.get().await()
+            snapshot.documents.mapNotNull { doc ->
+                val id = doc.getString("id") ?: return@mapNotNull null
+                val idUsuario = doc.getString("idUsuario") ?: return@mapNotNull null
+                val imagen = doc.getString("imagen") ?: return@mapNotNull null
+                val nombre = doc.getString("nombreEmprendimiento") ?: return@mapNotNull null
+                val telefono = doc.getString("telefono") ?: return@mapNotNull null
+                val descripcion = doc.getString("descripcion") ?: return@mapNotNull null
+                val categoria = doc.getString("categoria") ?: return@mapNotNull null
+
+
+                Emprendimiento(
+                    id = id,
+                    idUsuario = idUsuario,
+                    imagen = imagen,
+                    nombreEmprendimiento = nombre,
+                    telefono = telefono,
+                    descripcion = descripcion,
+                    categoria = categoria
+                )
             }
         } catch (e: Exception) {
+            Log.e("Firebase", "Error fetching emprendimientos", e)
             emptyList()
         }
     }
@@ -217,6 +236,30 @@ class FirebaseServiceEmprendimiento(
 
     suspend fun deleteEmprendimiento(id: String){
         collection.document(id).delete().await()
+    }
+
+    suspend fun getEmprendimientoById(id: String): Emprendimiento? {
+        val snapshot = collection.document(id).get().await()
+        // mapear la respuesta a un objeto Emprendimiento manualmente
+        val id = snapshot.getString("id") ?: return null
+        val idUsuario = snapshot.getString("idUsuario") ?: return null
+        val imagen = snapshot.getString("imagen") ?: return null
+        val nombre = snapshot.getString("nombreEmprendimiento") ?: return null
+        val telefono = snapshot.getString("telefono") ?: return null
+        val descripcion = snapshot.getString("descripcion") ?: return null
+        val categoria = snapshot.getString("categoria") ?: return null
+
+        Log.d("DEBUG", "getEmprendimientoById: $id")
+
+        return Emprendimiento(
+            id = id,
+            idUsuario = idUsuario,
+            imagen = imagen,
+            nombreEmprendimiento = nombre,
+            telefono = telefono,
+            descripcion = descripcion,
+            categoria = categoria
+        )
     }
 }
 
