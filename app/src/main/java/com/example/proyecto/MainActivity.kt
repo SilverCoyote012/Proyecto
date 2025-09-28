@@ -65,11 +65,14 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            var selectModo by remember { mutableStateOf(false)  }
+            var selectModo by remember { mutableStateOf(false)  }  //Inicia en modo claro
+            var selectOpcion by remember { mutableStateOf(true)  } //Incia en muestra de iconos en categorias
             ProyectoTheme(darkTheme = selectModo) {
                 AppNavHost(
                     selectModo = selectModo,
                     onSelectModo = { nuevoModo -> selectModo = nuevoModo },
+                    selectOpcion = selectOpcion,
+                    onSelectOpcion = { select -> selectOpcion = select },
                     viewModelUser = viewModelUser,
                     viewModelEmprendimiento = viewModelEmprendimiento,
                     viewModelProducto = viewModelProducto,

@@ -34,6 +34,7 @@ import com.example.emprendimientos.R
 fun menuCategory(
     selectedCategory: String?,
     onCategoryClick: (String?) -> Unit = {},
+    selectOpcion: Boolean
 ) {
     LazyRow(
         modifier = Modifier
@@ -62,58 +63,53 @@ fun menuCategory(
             "Movilidad y Transporte",
             "Entretenimiento"
         )
-
-
-
-
         // AQUI SE HACE EL CAMBIO DE PREFERENCIA SOBRE ICONO O TEXTO EN LA CATEGORIA
-
-
-
-        //MENU CON ICONOS
-        items(categoriesIcons.size) { index ->
-            val (icon, category) = categoriesIcons[index]
-            IconButton(
-                onClick = {
-                    if (selectedCategory == category) {
-                        onCategoryClick(null)
-                    } else {
-                        onCategoryClick(category)
+        if (selectOpcion) {
+            //MENU CON ICONOS
+            items(categoriesIcons.size) { index ->
+                val (icon, category) = categoriesIcons[index]
+                IconButton(
+                    onClick = {
+                        if (selectedCategory == category) {
+                            onCategoryClick(null)
+                        } else {
+                            onCategoryClick(category)
+                        }
                     }
+                ) {
+                    Icon(
+                        painter = painterResource(id = icon),
+                        contentDescription = category,
+                        tint = if (selectedCategory == category)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.size(32.dp)
+                    )
                 }
-            ) {
-                Icon(
-                    painter = painterResource(id = icon),
-                    contentDescription = category,
-                    tint = if (selectedCategory == category)
-                        MaterialTheme.colorScheme.primary
-                    else
-                        MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.size(32.dp)
-                )
             }
-        }
-
-        //MENU CON TEXTO
-        items(categoriesText.size) { index ->
-            val category = categoriesText[index]
-            androidx.compose.material3.TextButton(
-                onClick = {
-                    if (selectedCategory == category) {
-                        onCategoryClick(null)
-                    } else {
-                        onCategoryClick(category)
+        }else {
+            //MENU CON TEXTO
+            items(categoriesText.size) { index ->
+                val category = categoriesText[index]
+                androidx.compose.material3.TextButton(
+                    onClick = {
+                        if (selectedCategory == category) {
+                            onCategoryClick(null)
+                        } else {
+                            onCategoryClick(category)
+                        }
                     }
+                ) {
+                    Text(
+                        text = category,
+                        color = if (selectedCategory == category)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onPrimaryContainer,
+                        style = MaterialTheme.typography.labelMedium
+                    )
                 }
-            ) {
-                Text(
-                    text = category,
-                    color = if (selectedCategory == category)
-                        MaterialTheme.colorScheme.primary
-                    else
-                        MaterialTheme.colorScheme.onPrimaryContainer,
-                    style = MaterialTheme.typography.labelMedium
-                )
             }
         }
     }
@@ -126,7 +122,8 @@ fun CatalogoScreen(
     onEmprendimientosClick: () -> Unit = {},
     onPerfilClick: () -> Unit = {},
     onSelectEmprendimiento: (String) -> Unit = {},
-    viewModel: EmprendimientoModel
+    viewModel: EmprendimientoModel,
+    selectOpcion: Boolean
 ) {
     val emprendimientos by viewModel.emprendimientosFirebase.collectAsState()
     var selectedCategory by remember { mutableStateOf<String?>(null) }
@@ -157,7 +154,8 @@ fun CatalogoScreen(
                     selectedCategory = selectedCategory,
                     onCategoryClick = { category ->
                         selectedCategory = category
-                    }
+                    },
+                    selectOpcion = selectOpcion
                 )
             }
         }

@@ -25,6 +25,8 @@ import com.example.emprendimientos.screens.EmprendimientosScreen
 fun AppNavHost(
     selectModo: Boolean,
     onSelectModo: (Boolean) -> Unit,
+    selectOpcion: Boolean,
+    onSelectOpcion: (Boolean) -> Unit,
     viewModelUser: UserModel,
     viewModelEmprendimiento: EmprendimientoModel,
     viewModelProducto: ProductoModel,
@@ -71,7 +73,8 @@ fun AppNavHost(
                 onSelectEmprendimiento = { idEmprendimiento ->
                     navController.navigate("emprendimiento_detalle/$idEmprendimiento")
                 },
-                onPerfilClick = { navController.navigate("configuracionMenu") }
+                onPerfilClick = { navController.navigate("configuracionMenu") },
+                selectOpcion = selectOpcion
             )
         }
         composable(
@@ -101,7 +104,8 @@ fun AppNavHost(
         composable("Configuracion") {
             configuracionApp(
                 onBackPage = { navController.popBackStack()}, selectModo = selectModo,
-                onSelectModo = { nuevoModo -> onSelectModo(nuevoModo) }
+                onSelectModo = { nuevoModo -> onSelectModo(nuevoModo) }, selectOpcion = selectOpcion,
+                onSelectOpcion= { select -> onSelectOpcion(select) }
             )
         }
         composable("HistorialUser") { historialUsuario( onBackPage = { navController.popBackStack()}, viewModel = viewModelHistorial, viewModelUser = viewModelUser ) }
